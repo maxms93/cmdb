@@ -6,13 +6,13 @@ public class Server extends CI {
 
 	private boolean isVirtualized;
 	private boolean isSharedServer;
-	private ArrayList<CI> lComponents;
+	private ArrayList<CI> listComponents;
 	
-	public Server(int id, String bezeichnung, boolean isVirtualized, boolean isSharedServer, ArrayList<CI> lComponents) {
+	public Server(int id, String bezeichnung, boolean isVirtualized, boolean isSharedServer, ArrayList<CI> listComponents) {
 		super(id, "Server", bezeichnung);
 		this.isVirtualized = isVirtualized;
 		this.isSharedServer = isSharedServer;
-		this.lComponents = lComponents;
+		this.listComponents = listComponents;
 	}
 
 	public Server() {}
@@ -33,11 +33,16 @@ public class Server extends CI {
 		this.isSharedServer = isSharedServer;
 	}
 
-	public ArrayList<CI> getlComponents() {
-		return lComponents;
+	public ArrayList<CI> getListComponents() {
+		return listComponents;
 	}
 
-	public void setlComponents(ArrayList<CI> lComponents) {
-		this.lComponents = lComponents;
+	public void setListComponents(ArrayList<CI> listComponents) {
+		this.listComponents = listComponents;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + "|" + getBezeichnung()  + "|" + isVirtualized()  + "|" + isSharedServer();
 	}
 }

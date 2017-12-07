@@ -28,4 +28,9 @@ public class RAM extends CI {
 	public void setTaktung(String taktung) {
 		this.taktung = taktung;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + "|" + getBezeichnung()  + "|" + getGroesse()  + "|" + getTaktung();
+	}
 }
