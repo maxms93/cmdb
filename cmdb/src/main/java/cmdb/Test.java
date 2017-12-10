@@ -24,6 +24,7 @@ public class Test {
 
 	private static String updateEndPoint = "http://" + currentIP + ":3030/cmdb/update";
 	private static String queryEndPoint = "http://" + currentIP + ":3030/cmdb/query";
+	
 
 	public static void main(String[] args) {
 
@@ -59,6 +60,13 @@ public class Test {
 		{
 			System.out.println(ci.toString());
 		}
+	}
+	
+	public static ArrayList<CI> getDataFromFusekiAll() {
+		ArrayList<CI> listOfCI = getRAMFromFuseki();
+		listOfCI.addAll(getSoftwareFromFuseki());
+		
+		return listOfCI;
 	}
 
 	private static void writeStuffToFuseki() {
