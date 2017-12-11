@@ -193,10 +193,28 @@
 							</div>
 						</div>
 						
+						<%} else if (currentCi.getClass().equals(SystemSoftware.class)){
+						
+							SystemSoftware sys = (SystemSoftware) currentCi;
+						
+						%>
+						
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+								
+								<label>ISos</label> 
+								<input type="radio" class="form-control" 
+								id="isos" disabled="disabled"
+								value='<%=sys.isOS()%>'>
+								
+								</div>
+							</div>
+						</div>
+						
 						<%} %>
 						
 						<form action="delete?id=<%=currentCi.getId()%>" method="post">
-
  							<input type="submit" name="delete" value="Delete" class="btn btn-sm btn-success"/>
 						</form>
 

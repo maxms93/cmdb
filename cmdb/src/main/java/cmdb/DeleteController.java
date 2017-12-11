@@ -22,6 +22,17 @@ public class DeleteController extends HttpServlet{
 	 String id = request.getParameter("id");
 	 
 	 // TODO DELTE SPARQL query für ID 	
+	 
+	 
+	 ParameterizedSparqlString componentQuery = new ParameterizedSparqlString("" +
+		        "DELETE WHERE { "
+		        + "	     ?id rdf:id ex:example;"
+		        + "	    ex:name ?name ."
+		        + "	     FILTER(?id = 1) "
+		);
+		//QueryExecution exec = QueryExecutionFactory.sparqlService(queryEndPoint, componentQuery.asQuery());
+		
+
 		
 	 String nextJSP = "/index.jsp";
 		RequestDispatcher dispatcher = getServletContext()
