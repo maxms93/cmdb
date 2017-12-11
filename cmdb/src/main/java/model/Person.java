@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Person extends CI {
 
@@ -47,4 +48,5 @@ public class Person extends CI {
 	public String toString() {
 		return super.toString() + "|" + getBezeichnung()  + "|" + getVorname()  + "|" + getNachname();
 	}
-}
+	
+	}

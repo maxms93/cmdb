@@ -25,25 +25,25 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-	<style><%@include file="/WEB-INF/style.css"%></style>
+<style>
+<%@include file="/WEB-INF/style.css"%>
+</style>
 
 </head>
 <body>
-<%
+	<%
+		String remoteIP = "xxx.xx.xx.xx";
+		String localIP = "localhost";
 
-String remoteIP = "xxx.xx.xx.xx";
-String localIP = "localhost";
+		String currentIP = localIP;
 
-String currentIP = localIP;
+		String updateEndPoint = "http://" + currentIP + ":3030/cmdb/update";
+		String queryEndPoint = "http://" + currentIP + ":3030/cmdb/query";
 
-String updateEndPoint = "http://" + currentIP + ":3030/cmdb/update";
-String queryEndPoint = "http://" + currentIP + ":3030/cmdb/query";
+		cmdb.Test testCmDB = new cmdb.Test();
 
-cmdb.Test testCmDB = new cmdb.Test();
-
-ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
-
-%>
+		ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
+	%>
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<a class="navbar-brand" href="#">Configuration Management Database</a>
@@ -52,8 +52,8 @@ ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
 				<li class="nav-item active"><a class="nav-link" href="#">CMDB
 						<span class="sr-only">(current)</span>
 				</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">CI Management
-						<span class="sr-only">(current)</span>
+				<li class="nav-item"><a class="nav-link" href="#">CI
+						Management <span class="sr-only">(current)</span>
 				</a></li>
 			</ul>
 		</div>
@@ -85,7 +85,8 @@ ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
 								<td>Active</td>
 								<td>Production</td>
 								<td>Christian</td>
-								<td><button type="button" class="btn btn-sm btn-success">See Info</button></td>
+								<td><button type="button" class="btn btn-sm btn-success">See
+										Info</button></td>
 							</tr>
 							<tr style="color: red">
 								<th scope="row">2</th>
@@ -95,7 +96,8 @@ ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
 								<td>Inactive</td>
 								<td>Production</td>
 								<td>Christian</td>
-								<td><button type="button" class="btn btn-sm btn-success">See Info</button></td>
+								<td><button type="button" class="btn btn-sm btn-success">See
+										Info</button></td>
 							</tr>
 							<tr>
 								<th scope="row">2</th>
@@ -105,7 +107,8 @@ ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
 								<td>Active</td>
 								<td>Production</td>
 								<td>Christian</td>
-								<td><button type="button" class="btn btn-sm btn-success">See Info</button></td>
+								<td><button type="button" class="btn btn-sm btn-success">See
+										Info</button></td>
 							</tr>
 						</tbody>
 					</table>
@@ -114,7 +117,7 @@ ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
 			</div>
 		</div>
 	</div>
-	
+
 	<p>Eintraege aus Fuseki DB</p>
 	<div class="padder-top">
 		<div class="container-fluid text-center">
@@ -124,20 +127,22 @@ ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
 					<table class="table table-hover table-sm table-dark">
 						<thead>
 							<tr>
-								<th scope="col">#</th>
+								<th scope="col">Serial Number</th>
+								<th scope="col">CI Type</th>
 							</tr>
 						</thead>
 						<tbody>
-<%
-for(CI ci : listOfCI)
-{ 
-%>
+							<%
+								for (CI ci : listOfCI) {
+							%>
 							<tr>
-								<td> <%=ci.toString() %>	</td>
+								<td><%=ci.getId()%></td>
+								<td><%=ci.getType()%></td>
+								<td><a href="info.jsp?id=<%=ci.getId()%>" class="btn btn-default">See Info</a></td>
 							</tr>
-<%
-}
-%>
+							<%
+								}
+							%>
 						</tbody>
 					</table>
 				</div>
@@ -145,7 +150,7 @@ for(CI ci : listOfCI)
 			</div>
 		</div>
 	</div>
-	
+
 </body>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

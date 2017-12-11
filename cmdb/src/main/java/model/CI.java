@@ -45,4 +45,5 @@ public abstract class CI implements Serializable {
 	public String toString() {
 		return "" + getType() + "|" + getId();
 	}
+	
 }
