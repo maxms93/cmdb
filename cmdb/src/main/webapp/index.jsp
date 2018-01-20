@@ -32,14 +32,6 @@
 </head>
 <body>
 	<%
-		String remoteIP = "xxx.xx.xx.xx";
-		String localIP = "localhost";
-
-		String currentIP = localIP;
-
-		String updateEndPoint = "http://" + currentIP + ":3030/cmdb/update";
-		String queryEndPoint = "http://" + currentIP + ":3030/cmdb/query";
-
 		cmdb.Test testCmDB = new cmdb.Test();
 
 		ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
@@ -138,7 +130,7 @@
 							<tr>
 								<td><%=ci.getId()%></td>
 								<td><%=ci.getType()%></td>
-								<td><a href="info.jsp?id=<%=ci.getId()%>" class="btn btn-default">See Info</a></td>
+								<td><a href="info.jsp?id=<%=ci.getId()%>" class="btn btn-sm btn-success">See Info</a></td>
 							</tr>
 							<%
 								}

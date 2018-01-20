@@ -214,8 +214,8 @@
 						
 						<%} %>
 						
-						<form action="delete?id=<%=currentCi.getId()%>" method="post">
- 							<input type="submit" name="delete" value="Delete" class="btn btn-sm btn-success"/>
+						<form name="deleteForm" action="DeleteAction" method="Post">
+							<button name="delete" value="<%=currentCi.getId()%>" type="submit">Löschen</button>
 						</form>
 
 						

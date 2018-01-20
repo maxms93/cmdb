@@ -30,8 +30,11 @@ public class CmdbController {
 
 	private static String currentIP = localIP;
 
-	private static String updateEndPoint = "http://" + currentIP + ":3030/cmdb/update";
-	private static String queryEndPoint = "http://" + currentIP + ":3030/cmdb/query";
+	public static String updateEndPoint = "http://" + currentIP + ":3030/cmdb/update";
+	public static String queryEndPoint = "http://" + currentIP + ":3030/cmdb/query";
+	
+	public static String propertyPrefix = "PREFIX prop: <http://artmayr.com/property/>\n";
+	public static String ontologyPrefix = "PREFIX ont: <http://artmayr.com/ontology/>\n";
 	
 	private static void getDataFromFuseki() {
 		ArrayList<CI> listOfCI = getRAMFromFuseki();
@@ -82,8 +85,8 @@ public class CmdbController {
 		{
 			String nameNew = s.getBezeichnung().replace(" ", "_");
 			UpdateRequest update = UpdateFactory.create(
-            		"PREFIX prop: <http://artmayr.com/property/>\n" +
-                    "PREFIX ont: <http://artmayr.com/ontology/>\n" +
+					CmdbController.propertyPrefix +
+	                CmdbController.ontologyPrefix +
                     "INSERT DATA\n{\n<http://artmayr.com/resource/" + nameNew + "> " +
                     "prop:id \"" + s.getId() + "\" ;\n" +
                     "prop:type \"" + s.getType() + "\" ;\n" +
@@ -100,8 +103,8 @@ public class CmdbController {
 					if(comp instanceof RAM)
 					{
 						update = UpdateFactory.create(
-				        		"PREFIX prop: <http://artmayr.com/property/>\n" +
-				                "PREFIX ont: <http://artmayr.com/ontology/>\n" +
+								CmdbController.propertyPrefix +
+				                CmdbController.ontologyPrefix +
 				                "INSERT DATA\n{\n<http://artmayr.com/resource/" + comp.getId() + "_" + comp.getBezeichnung().replace(" ", "_") + "> " +
 				                "prop:id \"" + comp.getId() + "\" ;\n" +
 				                "prop:type \"" + comp.getType() + "\" ;\n" +
@@ -112,8 +115,8 @@ public class CmdbController {
 					    processor.execute();
 					    
 					    update = UpdateFactory.create(
-				        		"PREFIX prop: <http://artmayr.com/property/>\n" +
-				                "PREFIX ont: <http://artmayr.com/ontology/>\n" +
+					    		CmdbController.propertyPrefix +
+				                CmdbController.ontologyPrefix +
 				                "INSERT DATA\n{\n<http://artmayr.com/resource/" + nameNew + ">" +
 				                "prop:hasComponent \"" + comp.getId() + "_" + comp.getBezeichnung().replace(" ", "_") + "\" .\n}");
 					    processor = UpdateExecutionFactory.createRemote(update, updateEndPoint);
@@ -129,8 +132,8 @@ public class CmdbController {
 		{
 			String nameNew = p.getBezeichnung().replace(" ", "_");
 			UpdateRequest update = UpdateFactory.create(
-            		"PREFIX prop: <http://artmayr.com/property/>\n" +
-                    "PREFIX ont: <http://artmayr.com/ontology/>\n" +
+					CmdbController.propertyPrefix +
+	                CmdbController.ontologyPrefix +
                     "INSERT DATA\n{\n<http://artmayr.com/resource/" + p.getId() + "_" + nameNew + "> " +
                     "prop:id \"" + p.getId() + "\" ;\n" +
                     "prop:type \"" + p.getType() + "\" ;\n" +
@@ -147,8 +150,8 @@ public class CmdbController {
 					if(usage instanceof ApplicationSoftware)
 					{
 						update = UpdateFactory.create(
-				        		"PREFIX prop: <http://artmayr.com/property/>\n" +
-				                "PREFIX ont: <http://artmayr.com/ontology/>\n" +
+								CmdbController.propertyPrefix +
+				                CmdbController.ontologyPrefix +
 				                "INSERT DATA\n{\n<http://artmayr.com/resource/" + usage.getId() + "_" + usage.getBezeichnung().replace(" ", "_") + "> " +
 				                "prop:id \"" + usage.getId() + "\" ;\n" +
 				                "prop:type \"" + usage.getType() + "\" ;\n" +
@@ -158,8 +161,8 @@ public class CmdbController {
 					    processor.execute();
 					    
 					    update = UpdateFactory.create(
-				        		"PREFIX prop: <http://artmayr.com/property/>\n" +
-				                "PREFIX ont: <http://artmayr.com/ontology/>\n" +
+					    		CmdbController.propertyPrefix +
+				                CmdbController.ontologyPrefix +
 				                "INSERT DATA\n{\n<http://artmayr.com/resource/" + p.getId() + "_" + nameNew + ">" +
 				                "prop:isUsing \"" + usage.getId() + "_" + usage.getBezeichnung().replace(" ", "_") + "\" .\n}");
 					    processor = UpdateExecutionFactory.createRemote(update, updateEndPoint);
@@ -168,8 +171,8 @@ public class CmdbController {
 					if(usage instanceof SystemSoftware)
 					{
 						update = UpdateFactory.create(
-				        		"PREFIX prop: <http://artmayr.com/property/>\n" +
-				                "PREFIX ont: <http://artmayr.com/ontology/>\n" +
+								CmdbController.propertyPrefix +
+				                CmdbController.ontologyPrefix +
 				                "INSERT DATA\n{\n<http://artmayr.com/resource/" + usage.getId() + "_" + usage.getBezeichnung().replace(" ", "_") + "> " +
 				                "prop:id \"" + usage.getId() + "\" ;\n" +
 				                "prop:type \"" + usage.getType() + "\" ;\n" +
@@ -179,8 +182,8 @@ public class CmdbController {
 					    processor.execute();
 					    
 					    update = UpdateFactory.create(
-				        		"PREFIX prop: <http://artmayr.com/property/>\n" +
-				                "PREFIX ont: <http://artmayr.com/ontology/>\n" +
+					    		CmdbController.propertyPrefix +
+				                CmdbController.ontologyPrefix +
 				                "INSERT DATA\n{\n<http://artmayr.com/resource/" + p.getId() + "_" + nameNew + ">" +
 				                "prop:isUsing \"" + usage.getId() + "_" + usage.getBezeichnung().replace(" ", "_") + "\" .\n}");
 					    processor = UpdateExecutionFactory.createRemote(update, updateEndPoint);
@@ -202,8 +205,8 @@ public class CmdbController {
 		ArrayList<CI> listRAM = null;
 		ResultSet result;
 		ParameterizedSparqlString componentQuery = new ParameterizedSparqlString("" +
-		        "PREFIX ont: <http://artmayr.com/ontology/>\n" +
-		        "PREFIX prop: <http://artmayr.com/property/>\n" +
+				CmdbController.propertyPrefix +
+                CmdbController.ontologyPrefix +
 		        "SELECT\n" +
 		        "?id ?type ?bez ?groesse ?taktung \n" +
 		        "WHERE {\n" +
@@ -245,8 +248,8 @@ public class CmdbController {
 		ArrayList<CI> listSoftware = null;
 		ResultSet result;
 		ParameterizedSparqlString componentQuery = new ParameterizedSparqlString("" +
-		        "PREFIX ont: <http://artmayr.com/ontology/>\n" +
-		        "PREFIX prop: <http://artmayr.com/property/>\n" +
+				CmdbController.propertyPrefix +
+                CmdbController.ontologyPrefix +
 		        "SELECT\n" +
 		        "?id ?type ?bez ?linesOfCode ?os \n" +
 		        "WHERE {\n" +
