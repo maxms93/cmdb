@@ -1,18 +1,6 @@
 package cmdb;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-
-import jdk.internal.util.xml.impl.Pair;
-import model.ApplicationSoftware;
-import model.CI;
-import model.Harddisk;
-import model.PC;
-import model.Person;
-import model.RAM;
-import model.Server;
-import model.SystemSoftware;
 
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QueryExecution;
@@ -25,18 +13,26 @@ import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateProcessor;
 import org.apache.jena.update.UpdateRequest;
 
-public class CmdbController {
+import model.*;
+
+public class Cmdb {
 
 	private static String remoteIP = "xxx.xx.xx.xx";
 	private static String localIP = "localhost";
 
 	private static String currentIP = localIP;
 
-	public static String updateEndPoint = "http://" + currentIP + ":3030/cmdb/update";
-	public static String queryEndPoint = "http://" + currentIP + ":3030/cmdb/query";
+	private static String updateEndPoint = "http://" + currentIP + ":3030/cmdb/update";
+	private static String queryEndPoint = "http://" + currentIP + ":3030/cmdb/query";
+	
 
-	public static String propertyPrefix = "PREFIX prop: <http://artmayr.com/property/>\n";
-	public static String ontologyPrefix = "PREFIX ont: <http://artmayr.com/ontology/>\n";
+	public static void main(String[] args) {		
+		getDataFromFuseki();
+
+		clearAllOnFuseki();
+		
+		writeStuffToFuseki();
+	}
 
 	private static void getDataFromFuseki() {
 		ArrayList<CI> listOfCI = getRAMFromFuseki();
@@ -45,6 +41,7 @@ public class CmdbController {
 		for (CI ci : listOfCI) {
 			System.out.println(ci.toString());
 		}
+
 	}
 
 	public static ArrayList<CI> getDataFromFusekiAll() {

@@ -2,18 +2,18 @@ package model;
 
 import cmdb.CmdbController;
 
-public class RAM extends CI {
+public class Harddisk extends CI {
 
 	private String groesse;
-	private String taktung;
+	private String schnittstelle;
 	
-	public RAM(String bezeichnung, String groesse, String taktung) {
-		super("RAM", bezeichnung);
+	public Harddisk(String bezeichnung, String groesse, String schnittstelle) {
+		super("Harddisk", bezeichnung);
 		this.groesse = groesse;
-		this.taktung = taktung;
+		this.schnittstelle = schnittstelle;
 	}
 	
-	public RAM() {}
+	public Harddisk() {}
 
 	public String getGroesse() {
 		return groesse;
@@ -23,17 +23,17 @@ public class RAM extends CI {
 		this.groesse = groesse;
 	}
 
-	public String getTaktung() {
-		return taktung;
+	public String getSchnittstelle() {
+		return schnittstelle;
 	}
 
-	public void setTaktung(String taktung) {
-		this.taktung = taktung;
+	public void setSchnittstelle(String schnittstelle) {
+		this.schnittstelle = schnittstelle;
 	}
 	
 	@Override
 	public String toString() {
-		return super.toString() + "|" + getBezeichnung()  + "|" + getGroesse()  + "|" + getTaktung();
+		return super.toString() + "|" + getBezeichnung()  + "|" + getGroesse()  + "|" + getSchnittstelle();
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class RAM extends CI {
 	            /*"prop:type \"" + getType() + "\" ;\n" +*/
 	            "prop:name \"" + getBezeichnung() + "\" ;\n" +
 	            "prop:groesse \"" + getGroesse() + "\" ;\n" +
-	            "prop:taktung \"" + getTaktung() + "\" .\n}";
+	            "prop:schnittstelle \"" + getSchnittstelle() + "\" .\n}";
 	}
 	
 	@Override
