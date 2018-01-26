@@ -32,9 +32,7 @@
 </head>
 <body>
 	<%
-		cmdb.Test testCmDB = new cmdb.Test();
-
-		ArrayList<CI> listOfCI = testCmDB.getDataFromFusekiAll();
+		ArrayList<CI> listOfCI = CmdbController.getDataFromFusekiAll();
 	%>
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -136,6 +134,7 @@
 								}
 							%>
 						</tbody>
+						<a href="create.jsp" class="btn btn-sm btn-success">Create</a>
 					</table>
 				</div>
 				<div class="col-sm-1 sidenav"></div>

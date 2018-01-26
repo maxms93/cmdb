@@ -34,20 +34,6 @@
 </head>
 <body>
 
-	<%
-	
-		ArrayList<CI> listOfCI = CmdbController.getDataFromFusekiAll();
-		CI currentCi = null;
-		for(CI c : listOfCI){
-			if (c.getId() == Integer.parseInt(request.getParameter("id"))){
-				currentCi = c;
-				break;
-			}
-		}	
-
-
-	%>
-
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<a class="navbar-brand" href="#">Configuration Management Database</a>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -70,19 +56,8 @@
 								<h4 class="title">Details</h4>
 							</div>
 							<div class="content">
-									
-						<div class="row">
-							<div class="col-md-3">
-								<div class="form-group">
-								
-								<label>Serial Nummer</label> 
-								<input type="text" class="form-control"
-								id="serial" disabled="disabled"
-								value='<%=currentCi.getId()%>'>
-								
-								</div>
-							</div>
-						</div>
+							
+						<form name="createForm" action="CreateAction" method="Post">
 						
 						<div class="row">
 							<div class="col-md-3">
@@ -90,8 +65,8 @@
 								
 								<label>Type</label> 
 								<input type="text" class="form-control" 
-								id="type" disabled="disabled"
-								value='<%=currentCi.getType()%>'>
+								id="type" name="type" disabled="disabled"
+								value='<%=request.getParameter("type")%>'>
 								
 								</div>
 							</div>
@@ -103,16 +78,16 @@
 								
 								<label>Bezeichnung</label> 
 								<input type="text" class="form-control" 
-								id="bezeichnung" disabled="disabled"
-								value='<%=currentCi.getBezeichnung()%>'>
+								id="bezeichnung" name="bezeichnung" disabled="disabled"
+								value="<%=request.getParameter("bezeichnung")%>">
 								
 								</div>
 							</div>
 						</div>
 						
-						<%if (currentCi.getClass().equals(RAM.class)){
-						
-							RAM ram = (RAM) currentCi;
+						<%				
+
+						if (request.getParameter("type") != null && request.getParameter("type").equals("RAM")){
 							
 						%>
 												
@@ -122,8 +97,7 @@
 								
 								<label>Größe</label> 
 								<input type="text" class="form-control" 
-								id="groesse" disabled="disabled"
-								value='<%=ram.getGroesse()%>'>
+								id="groesse" name="groesse">
 								
 								</div>
 							</div>
@@ -135,16 +109,13 @@
 								
 								<label>Taktung</label> 
 								<input type="text" class="form-control" 
-								id="taktung" disabled="disabled"
-								value='<%=ram.getTaktung()%>'>
+								id="taktung" name="taktung">
 								
 								</div>
 							</div>
 						</div>
 						
-						<%} else if (currentCi.getClass().equals(Person.class)){
-						
-							Person person = (Person) currentCi;
+						<%} else if (request.getParameter("type") != null && request.getParameter("type").equals("Person")){
 						
 						%>
 						
@@ -154,8 +125,7 @@
 								
 								<label>Vorname</label> 
 								<input type="text" class="form-control" 
-								id="Vorname" disabled="disabled"
-								value='<%=person.getVorname()%>'>
+								id="vorname" name="vorname">
 								
 								</div>
 							</div>
@@ -167,16 +137,13 @@
 								
 								<label>Nachname</label> 
 								<input type="text" class="form-control" 
-								id="nachname" disabled="disabled"
-								value='<%=person.getNachname()%>'>
+								id="nachname" name="nachname">
 								
 								</div>
 							</div>
 						</div>
 						
-						<%} else if (currentCi.getClass().equals(ApplicationSoftware.class)){
-						
-							ApplicationSoftware app = (ApplicationSoftware) currentCi;
+						<%} else if (request.getParameter("type") != null && request.getParameter("type").equals("ApplicationSoftware")){
 						
 						%>
 						
@@ -186,16 +153,13 @@
 								
 								<label>Lines Of Code</label> 
 								<input type="text" class="form-control" 
-								id="loc" disabled="disabled"
-								value='<%=app.getLinesOfCode()%>'>
+								id="linesOfCode" name="linesOfCode">
 								
 								</div>
 							</div>
 						</div>
 						
-						<%} else if (currentCi.getClass().equals(SystemSoftware.class)){
-						
-							SystemSoftware sys = (SystemSoftware) currentCi;
+						<%} else if (request.getParameter("type") != null && request.getParameter("type").equals("SystemSoftware")){
 						
 						%>
 						
@@ -205,8 +169,79 @@
 								
 								<label>ISos</label> 
 								<input type="radio" class="form-control" 
-								id="isos" disabled="disabled"
-								value='<%=sys.isOS()%>'>
+								id="isOS" name="isOS">
+								
+								</div>
+							</div>
+						</div>
+						
+						<%} else if (request.getParameter("type") != null && request.getParameter("type").equals("PC")){
+						
+						%>
+						
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+								
+								<label>isThinclient</label> 
+								<input type="radio" class="form-control" 
+								id="isThinclient" name="isThinclient">
+								
+								</div>
+							</div>
+						</div>
+						
+						<%} else if (request.getParameter("type") != null && request.getParameter("type").equals("Server")){
+						
+						%>
+						
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+								
+								<label>isVirtualized</label> 
+								<input type="radio" class="form-control" 
+								id="isVirtualized" name="isVirtualized">
+								
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+								
+								<label>isSharedServer</label> 
+								<input type="radio" class="form-control" 
+								id="isSharedServer" name="isSharedServer">
+								
+								</div>
+							</div>
+						</div>
+						
+						<%} else if (request.getParameter("type") != null && request.getParameter("type").equals("Harddisk")){
+						
+						%>
+						
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+								
+								<label>Groesse</label> 
+								<input type="text" class="form-control" 
+								id="groesse" name="groesse">
+								
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+								
+								<label>schnittstelle</label> 
+								<input type="text" class="form-control" 
+								id="schnittstelle" name="schnittstelle">
 								
 								</div>
 							</div>
@@ -214,9 +249,9 @@
 						
 						<%} %>
 						
-						<form name="deleteForm" action="DeleteAction" method="Post">
-							<input name="type" hidden="true" value="<%=currentCi.getType()%>"/>
-							<button name="delete" value="<%=currentCi.getId()%>" type="submit">Löschen</button>
+							<input name="type" hidden="true" value="<%=request.getParameter("type")%>"/>
+							<input name="bezeichnung" hidden="true" value="<%=request.getParameter("bezeichnung")%>"/>
+							<button name="create" value="2" type="submit">Create</button>
 						</form>
 
 						

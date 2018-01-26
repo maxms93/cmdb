@@ -17,6 +17,12 @@ public class PC extends CI {
 
 	public PC() {}
 	
+	public PC(String bezeichnung, boolean isThinclient) {
+		super("PC", bezeichnung);
+		this.isThinclient = isThinclient;
+		listComponents = new ArrayList<CI>();
+	}
+
 	public boolean isThinclient() {
 		return isThinclient;
 	}

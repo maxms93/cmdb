@@ -19,6 +19,13 @@ public class Server extends CI {
 
 	public Server() {}
 	
+	public Server(String bezeichnung, boolean isVirtualized, boolean isSharedServer) {
+		super("Server", bezeichnung);
+		this.isVirtualized = isVirtualized;
+		this.isSharedServer = isSharedServer;
+		listComponents = new ArrayList<CI>();
+	}
+
 	public boolean isVirtualized() {
 		return isVirtualized;
 	}

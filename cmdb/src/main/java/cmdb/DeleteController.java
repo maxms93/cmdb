@@ -18,6 +18,7 @@ public class DeleteController extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 
 		String id = request.getParameter("delete");
+		String type = request.getParameter("type");
 
 		UpdateRequest update = UpdateFactory.create(
 				CmdbController.propertyPrefix +
@@ -32,7 +33,25 @@ public class DeleteController extends HttpServlet {
 				CmdbController.updateEndPoint);
 		processor.execute();
 
+		update = UpdateFactory.create(
+				CmdbController.propertyPrefix +
+                CmdbController.ontologyPrefix +
+				"DELETE " + 
+                "{ ?s ?p ?serial } " +
+                "WHERE " +
+				"{ ?serial prop:id ?id . " +
+				"FILTER ( ?id = \"" + id + "\") " +
+				"?s ?p ?serial }");
+		processor = UpdateExecutionFactory.createRemote(update,
+				CmdbController.updateEndPoint);
+		processor.execute();
+		
 		response.sendRedirect("index.jsp");
 
 	}
+	
+	// DELETE {<http://artmayr.com/resource/myServer/1> ?predicate ?object}
+	//WHERE {
+    //  <http://artmayr.com/resource/myServer/1> ?predicate ?object
+		//}
 }

@@ -22,6 +22,13 @@ public class Person extends CI {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Person(String bezeichnung, String vorname, String nachname) {
+		super("Person", bezeichnung);
+		this.vorname = vorname;
+		this.nachname = nachname;
+		this.listUsage = new ArrayList<CI>();
+	}
+
 	public String getVorname() {
 		return vorname;
 	}
