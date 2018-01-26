@@ -33,6 +33,8 @@
 <body>
 	<%
 		ArrayList<CI> listOfCI = CmdbController.getDataFromFusekiAll();
+	
+		ArrayList<CI> listOfCI2 = ReadController.GetAllServerFromDB();
 	%>
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
