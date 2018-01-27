@@ -19,39 +19,38 @@ public class DeleteController extends HttpServlet {
 
 		String id = request.getParameter("delete");
 		String type = request.getParameter("type");
-
+		
+		String resource = "<http://artmayr.com/resource/" + type + "/" + id+ ">";
+		
 		UpdateRequest update = UpdateFactory.create(
 				CmdbController.propertyPrefix +
                 CmdbController.ontologyPrefix +
 				"DELETE " + 
                 "{ ?serial ?p ?o } " +
                 "WHERE " +
-				"{ ?serial prop:id ?id . " +
-				"FILTER ( ?id = \"" + id + "\") " +
+				"{ ?serial ?p ?o . " +
+				"FILTER ( ?serial = " + resource + ") " +
 				"?serial ?p ?o }");
 		UpdateProcessor processor = UpdateExecutionFactory.createRemote(update,
 				CmdbController.updateEndPoint);
 		processor.execute();
-
+		
+		
 		update = UpdateFactory.create(
 				CmdbController.propertyPrefix +
                 CmdbController.ontologyPrefix +
 				"DELETE " + 
                 "{ ?s ?p ?serial } " +
                 "WHERE " +
-				"{ ?serial prop:id ?id . " +
-				"FILTER ( ?id = \"" + id + "\") " +
+				"{ ?s prop:hasComponent ?serial . " +
+				"FILTER ( ?serial= " + resource + ") " +
 				"?s ?p ?serial }");
 		processor = UpdateExecutionFactory.createRemote(update,
 				CmdbController.updateEndPoint);
 		processor.execute();
-		
+				
 		response.sendRedirect("index.jsp");
 
 	}
 	
-	// DELETE {<http://artmayr.com/resource/myServer/1> ?predicate ?object}
-	//WHERE {
-    //  <http://artmayr.com/resource/myServer/1> ?predicate ?object
-		//}
 }
