@@ -32,8 +32,8 @@
 </head>
 <body>
 	<%
-		ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
-	
+		//ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
+		ArrayList<CI> listOfCI = ReadController.GetAllServerFromDB();
 	%>
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">

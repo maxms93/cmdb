@@ -42,7 +42,8 @@ public class GetAllTerms {
 			"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" + 
 			"PREFIX umls: <http://bioportal.bioontology.org/ontologies/umls/>\n" +
 			"PREFIX res: <http://artmayr.com/resource/>\n"+
-			"PREFIX prop: <http://artmayr.com/property/>\n";
+			"PREFIX prop: <http://artmayr.com/property/>\n"+
+			"PREFIX ont: <http://artmayr.com/ontology/>\n";
 	
 	private static String ALL_URIS = "SELECT DISTINCT ?uri \n" + 
 			//"FROM  <$GRAPH>" +
@@ -51,7 +52,7 @@ public class GetAllTerms {
 			//"    ?uri a owl:Class .\n" + 
 			"    ?uri a res:Class .\n" + 
 			//"}}"; /* To play with a smaller extraction include 'LIMIT 500' */
-			"}"; /* To play with a smaller extraction include 'LIMIT 500' */
+			"}"; 
 	
 	
 	public static ResultSet executeQuery(String queryString) throws Exception {
@@ -168,7 +169,7 @@ public class GetAllTerms {
 		 * skos:altLabel, rdfs:subClassOf
 		 */
 		//String[] properties = { "umls:cui", "skos:notation" };
-		String[] properties = { "prop:type", "prop:name" };
+		String[] properties = { "prop:name" };
 		
 		
 		/**

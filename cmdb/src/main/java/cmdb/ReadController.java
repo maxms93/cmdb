@@ -64,11 +64,11 @@ public class ReadController extends HttpServlet {
 			sb.addPrefix("prop", "http://artmayr.com/property/");
 			sb.addPrefix("server", graphName1.getURI());
 			sb.addVar( "*" );
-			sb.addWhere( "?x", "prop:id", "?id" );
-			sb.addWhere( "?x", "prop:type", "?type" );
+			//sb.addWhere( "?x", "prop:id", "?id" );
+			//sb.addWhere( "?x", "prop:type", "?type" );
 			sb.addWhere( "?x", "prop:name", "?bez");
-			//sb.addFilter("REGEX(?x, '"+ className +"')");
-			sb.addFilter("REGEX(?type, '"+ className +"')");
+			sb.addFilter("REGEX(str(?x), '"+ className +"')");
+			//sb.addFilter("REGEX(?type, '"+ className +"')");
 			
 			
 			// sb.setVar( Var.alloc( "?o" ), graphName1.getURI() ) ;
@@ -82,21 +82,36 @@ public class ReadController extends HttpServlet {
 		    while (result.hasNext()) {
 		        QuerySolution nextSolution = result.next();
 
-		        RDFNode id = nextSolution.get("id");
-		        RDFNode type = nextSolution.get("type");
+		        RDFNode uri = nextSolution.get("x");
+		        //RDFNode id = nextSolution.get("id");
+		        //RDFNode type = nextSolution.get("type");
 		        RDFNode bezeichnung = nextSolution.get("bez");
-
-		        CI tempCI = new Server();
-		        // tempCI.setId(id.asLiteral().getInt());
-		        //tempCI.setType(type.toString());
-		        tempCI.setBezeichnung(bezeichnung.toString());
-		        listOfCI.add(tempCI);
+		        
+		        
+		        String searchSubStr = className + "/";
+		        int indexFromId = uri.toString().indexOf(searchSubStr);
+		        
+		        if (indexFromId > 0) {
+			        String strId = uri.toString().substring(indexFromId + searchSubStr.length());
+	
+			        //CI tempCI = new Server();
+			        
+			        Class cls = Class.forName("model."+className);	
+			        model.CI tempCI = (CI) cls.newInstance();
+			    
+			        //tempCI.setId(id.asLiteral().getInt());
+			        tempCI.setId(Integer.parseInt(strId));
+			        tempCI.setType(className);
+			        tempCI.setBezeichnung(bezeichnung.toString());
+		        
+			        listOfCI.add(tempCI);
+		        }
 		    }
 		    
 		}
 		catch (Exception ex) 
 		{
-			System.out.println(ex.getMessage());
+			System.out.println(ex.toString() + ex.getMessage());
 		}
 		finally {
 			if (exec != null)
