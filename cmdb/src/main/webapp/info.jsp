@@ -36,7 +36,7 @@
 
 	<%
 	
-		ArrayList<CI> listOfCI = CmdbController.getDataFromFusekiAll();
+		ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
 		CI currentCi = null;
 		for(CI c : listOfCI){
 			if (c.getId() == Integer.parseInt(request.getParameter("id"))){
@@ -204,7 +204,7 @@
 								<div class="form-group">
 								
 								<label>ISos</label> 
-								<input type="radio" class="form-control" 
+								<input type="checkbox" class="form-control" 
 								id="isos" disabled="disabled"
 								value='<%=sys.isOS()%>'>
 								

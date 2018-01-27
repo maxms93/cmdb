@@ -19,6 +19,12 @@
 		<servlet-class>cmdb.CreateController</servlet-class>
 	</servlet>
 	
+	<servlet>
+		<display-name>AddComponentController</display-name>
+		<servlet-name>AddComponentController</servlet-name>
+		<servlet-class>cmdb.AddComponentController</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>DeleteController</servlet-name>
 		<url-pattern>/DeleteAction</url-pattern>
@@ -28,6 +34,11 @@
 	<servlet-mapping>
 		<servlet-name>CreateController</servlet-name>
 		<url-pattern>/CreateAction</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AddComponentController</servlet-name>
+		<url-pattern>/AddComponentAction</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>

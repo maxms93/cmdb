@@ -1,3 +1,5 @@
+<%@page import="javafx.util.Pair"%>
+<%@page import="java.util.HashMap"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.apache.jena.query.ParameterizedSparqlString"%>
@@ -31,10 +33,6 @@
 
 </head>
 <body>
-	<%
-		ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
-	
-	%>
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<a class="navbar-brand" href="#">Configuration Management Database</a>
@@ -49,44 +47,51 @@
 			</ul>
 		</div>
 	</nav>
-
-	<p>Eintraege aus Fuseki DB</p>
-	<div class="padder-top">
-		<div class="container-fluid text-center">
-			<div class="row content">
-				<div class="col-sm-1 sidenav"></div>
-				<div class="col-sm-10 text-left">
-					<table class="table table-hover table-sm table-dark">
-						<thead>
-							<tr>
-								<th scope="col">Serial Number</th>
-								<th scope="col">CI Type</th>
-							</tr>
-						</thead>
-						<tbody>
-							<%
-								for (CI ci : listOfCI) {
-							%>
-							<tr>
-								<td><%=ci.getId()%></td>
-								<td><%=ci.getType()%></td>
-								<td><a href="info.jsp?id=<%=ci.getId()%>" class="btn btn-sm btn-success">See Info</a></td>
+	<div class="content">
+				<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-8">
+						<div class="card">
+							<div class="header">
+								<h4 class="title">Details</h4>
+							</div>
+							<div class="content">
+							
+						<form name="addComponentForm" action="AddComponentAction" method="Post">
+						
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
 								
-								<% if (ci.getType().equals("Server") || ci.getType().equals("Person") || ci.getType().equals("PC")){
-									
-									out.println("<td><a href=\"addComponent.jsp?id="+ ci.getId() +"\" class=\"btn btn-sm btn-success\">Add Component</a></td>");
-									
-								} %>
-							</tr>
-							<%
-								}
-							%>
-						</tbody>
-					</table>
-					<a href="create.jsp" class="btn btn-sm btn-success">Create</a>
+								<label>Component</label> 
+								<select name="component">
+								
+								<% //Get aLL Available Components %>
+								
+									<option value="Server" selected="selected">Server</option>
+									<option value="RAM">RAM</option>
+									<option value="Harddisk">Harddisk</option>
+									<option value="PC">PC</option>
+									<option value="Person">Person</option>
+									<option value="SystemSoftware">SystemSoftware</option>
+									<option value="ApplicationSoftware">ApplicationSoftware</option>
+								
+								</select>
+								
+								</div>
+							</div>
+						</div>
+						
+						</div>				
+							<button name="add" class="btn btn-sm btn-success" type="submit">Add</button>
+						</form>
+
+						</div>
+					</div>
 				</div>
-				<div class="col-sm-1 sidenav"></div>
 			</div>
+			</div>
+
 		</div>
 	</div>
 

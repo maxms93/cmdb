@@ -44,8 +44,8 @@ public class CreateController extends HttpServlet {
 			
 			if (type.equals("Server")) {
 				
-				boolean isVirtualized = request.getParameter("isVirtualized").equals("on");
-				boolean isSharedServer = request.getParameter("isSharedServer").equals("on");
+				boolean isVirtualized = request.getParameter("isVirtualized") != null && request.getParameter("isVirtualized").equals("on");
+				boolean isSharedServer = request.getParameter("isSharedServer") != null && request.getParameter("isSharedServer").equals("on");
 				ci = new Server(bezeichnung, isVirtualized, isSharedServer);
 				
 			}else if (type.equals("ApplicationSoftware")) {
@@ -61,7 +61,7 @@ public class CreateController extends HttpServlet {
 				
 			}else if (type.equals("PC")) {
 				
-				boolean isThinclient = request.getParameter("isThinclient").equals("on");
+				boolean isThinclient = request.getParameter("isThinclient") != null && request.getParameter("isThinclient").equals("on");
 				ci = new PC(bezeichnung, isThinclient);
 				
 			}else if (type.equals("Person")) {
@@ -72,7 +72,7 @@ public class CreateController extends HttpServlet {
 				
 			}else if (type.equals("SystemSoftware")) {
 				
-				boolean isOS = request.getParameter("isOS").equals("on");
+				boolean isOS = request.getParameter("isOS") != null && request.getParameter("isOS").equals("on");
 				ci = new SystemSoftware(bezeichnung, isOS);
 				
 			}else if (type.equals("RAM")) {

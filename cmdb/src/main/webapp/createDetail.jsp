@@ -168,7 +168,7 @@
 								<div class="form-group">
 								
 								<label>ISos</label> 
-								<input type="radio" class="form-control" 
+								<input type="checkbox" class="form-control" 
 								id="isOS" name="isOS">
 								
 								</div>
@@ -184,7 +184,7 @@
 								<div class="form-group">
 								
 								<label>isThinclient</label> 
-								<input type="radio" class="form-control" 
+								<input type="checkbox" class="form-control" 
 								id="isThinclient" name="isThinclient">
 								
 								</div>
@@ -200,7 +200,7 @@
 								<div class="form-group">
 								
 								<label>isVirtualized</label> 
-								<input type="radio" class="form-control" 
+								<input type="checkbox" class="form-control" 
 								id="isVirtualized" name="isVirtualized">
 								
 								</div>
@@ -212,7 +212,7 @@
 								<div class="form-group">
 								
 								<label>isSharedServer</label> 
-								<input type="radio" class="form-control" 
+								<input type="checkbox" class="form-control" 
 								id="isSharedServer" name="isSharedServer">
 								
 								</div>

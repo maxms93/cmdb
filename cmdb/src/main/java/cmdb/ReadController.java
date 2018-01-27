@@ -18,11 +18,9 @@ import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateProcessor;
 import org.apache.jena.update.UpdateRequest;
-
 import org.apache.jena.graph.*;
 import org.apache.jena.query.*;
 import org.apache.jena.sparql.core.*;
-
 import org.apache.jena.arq.querybuilder.*;
 
 import model.*;
@@ -107,8 +105,9 @@ public class ReadController extends HttpServlet {
 		return listOfCI;
 	}
 
-	protected static ArrayList<CI> getAllCiFromDB() {
-		ArrayList<CI> listOfCI = null;
+	public static ArrayList<CI> getAllCiFromDB() {
+		ArrayList<CI> listOfCI = new ArrayList<CI>();
+		listOfCI.add(new Server("max", true, false));
 		ResultSet result;
 		ParameterizedSparqlString componentQuery = new ParameterizedSparqlString("" +
 				CmdbController.propertyPrefix +
