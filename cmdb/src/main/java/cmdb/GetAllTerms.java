@@ -35,12 +35,13 @@ public class GetAllTerms {
 	 */
 	private static int PAGE_SIZE = 65; /* WARNING KEEP UNDER 65 UNTIL FURTHER NOTICE */
 	
-	private static String PREFIXES = "PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>\n" + 
-			"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
-			"PREFIX owl:  <http://www.w3.org/2002/07/owl#>\n" + 
-			"PREFIX meta: <http://bioportal.bioontology.org/metadata/def/> \n" + 
-			"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" + 
-			"PREFIX umls: <http://bioportal.bioontology.org/ontologies/umls/>\n" +
+	private static String PREFIXES = 
+			//"PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>\n" + 
+			//"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
+			//"PREFIX owl:  <http://www.w3.org/2002/07/owl#>\n" + 
+			//"PREFIX meta: <http://bioportal.bioontology.org/metadata/def/> \n" + 
+			//"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" + 
+			//"PREFIX umls: <http://bioportal.bioontology.org/ontologies/umls/>\n" +
 			"PREFIX res: <http://artmayr.com/resource/>\n"+
 			"PREFIX prop: <http://artmayr.com/property/>\n"+
 			"PREFIX ont: <http://artmayr.com/ontology/>\n";
@@ -103,6 +104,7 @@ public class GetAllTerms {
 	
 	
 	public static void getTermBatch(List<Resource> resources, String[] properties) throws Exception {
+		
 		String queryBatch = getQueryTermBatch(resources,properties);
 		
 		ResultSet rs = executeQuery(queryBatch);

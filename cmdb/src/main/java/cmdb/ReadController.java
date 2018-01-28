@@ -2,18 +2,17 @@ package cmdb;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateProcessor;
@@ -21,7 +20,11 @@ import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.graph.*;
 import org.apache.jena.query.*;
 import org.apache.jena.sparql.core.*;
+import org.apache.jena.sparql.engine.http.HttpQuery;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.arq.querybuilder.*;
+
+import java.lang.reflect.Field;
 
 import model.*;
 
@@ -38,8 +41,17 @@ import model.*;
 public class ReadController extends HttpServlet {
 	
 	// <http://artmayr.com/resource/"TYPE von CI"/
+	
+	private static String PREFIXES = 
+			"PREFIX res: <http://artmayr.com/resource/>\n"+
+			"PREFIX prop: <http://artmayr.com/property/>\n"+
+			"PREFIX ont: <http://artmayr.com/ontology/>\n";
+	
+	public static String rescourceUri = "http://artmayr.com/resource/";
+	public static String propertyUri = "http://artmayr.com/property/";
+	public static String ontologyUri = "http://artmayr.com/ontology/";
+	
 	private static SelectBuilder selectBuild = null;
-	 public static String rescourceUri = "http://artmayr.com/resource/";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -122,43 +134,219 @@ public class ReadController extends HttpServlet {
 
 	public static ArrayList<CI> getAllCiFromDB() {
 		ArrayList<CI> listOfCI = new ArrayList<CI>();
-		listOfCI.add(new Server("max", true, false));
-		ResultSet result;
-		ParameterizedSparqlString componentQuery = new ParameterizedSparqlString("" +
-				CmdbController.propertyPrefix +
-                CmdbController.ontologyPrefix +
-		        "SELECT\n" +
-		        "?id ?type ?bez \n" +
-		        "WHERE {\n" +
-		        "?x prop:id ?id . \n" +
-		        "?x prop:type ?type . \n" +
-		        "?x prop:name ?bez . \n" +
-		        "}\n"
-		);
-		
-		/*
-		QueryExecution exec = QueryExecutionFactory.sparqlService(CmdbController.queryEndPoint, componentQuery.asQuery());
-		try {
-		    result = exec.execSelect();
-		    listOfCI = new ArrayList<CI>();
-		    while (result.hasNext()) {
-		        QuerySolution nextSolution = result.next();
-
-		        RDFNode id = nextSolution.get("id");
-		        RDFNode type = nextSolution.get("type");
-		        RDFNode bezeichnung = nextSolution.get("bez");
-
-		        CI tempCI = new CI();
-		        tempCI.setId(id.asLiteral().getInt());
-		        tempCI.setType(type.toString());
-		        tempCI.setBezeichnung(bezeichnung.toString());
-		        listOfCI.add(tempCI);
-		    }
-		} finally {
-		    exec.close();
+		//listOfCI.add(new Server("max", true, false));
+		try
+		{
+			ResultSet result;
+			
+			List<String> listOfModelsResource = new ArrayList<String>();
+			listOfModelsResource.add("Server");
+			listOfModelsResource.add("ApplicationSoftware");
+			listOfModelsResource.add("Harddisk");
+			listOfModelsResource.add("PC");
+			//listOfModelsResource.add("Person");
+			listOfModelsResource.add("RAM");
+			//listOfModelsResource.add("SystemSoftware");
+			
+			for (String className : listOfModelsResource) {
+				Class cls = Class.forName("model."+ className);
+				String[] properties = GetPropertiesFromClass(cls);
+				String queryBatch = getQueryTermBatch(Arrays.asList(className), properties);
+				ResultSet rs = executeQuery(queryBatch);
+				
+				while (rs.hasNext()) {
+					QuerySolution sol = rs.next();
+					
+					model.CI tempCI = (CI) cls.newInstance();
+					
+					RDFNode uri = sol.get("uri");
+					String searchSubStr = className + "/";
+			        int indexFromId = uri.toString().indexOf(searchSubStr);
+			        
+			        String strId = null;
+			        if (indexFromId > 0) {
+				        strId = uri.toString().substring(indexFromId + searchSubStr.length());
+				        
+				        //tempCI.setId(id.asLiteral().getInt());
+				        tempCI.setId(Integer.parseInt(strId));
+				        tempCI.setType(className);
+			        }
+					
+					/**
+					 * TODO: your code here ... do something with this term.
+					 * 
+					 * The sample code below just prints the term information.
+					 */
+					
+					// Remove comments to print resultset
+					Iterator<String> varnames = sol.varNames();
+					System.out.print("Term Data : ");
+					while (varnames.hasNext()) {
+						String var = varnames.next();
+						if (!sol.get(var).isLiteral()) {
+							System.out.print(var+"="+sol.get(var).toString()+"   ");
+						}
+						else {
+							System.out.print(var+"="+sol.get(var).asLiteral().getValue().toString()+"   ");
+							ReadController.set(tempCI, var, sol.get(var).asLiteral().getValue().toString());
+						}
+						
+					} 
+					System.out.println();
+					
+					if (strId != null)
+						listOfCI.add(tempCI);
+				}
+			}
 		}
-		 */
+		catch (Exception ex) 
+		{
+			System.out.println(ex.toString() + ex.getMessage());
+		}
 		
 		return listOfCI;
+	}
+	
+	public static String[] GetPropertiesFromClass(Class cls) throws Exception
+	{
+		String[] properties = null;
+		
+		List<String> lstProperties = new ArrayList<String>();
+		// model.Server
+		
+		java.lang.reflect.Field[] fields = cls.getDeclaredFields();
+		for (Field field : fields) {
+			if (!java.util.ArrayList.class.isAssignableFrom(field.getType())){
+				lstProperties.add("prop:" + field.getName());
+			}
+		}
+		
+		properties = lstProperties.toArray(new String[lstProperties.size()]);
+		
+		return properties;
+	}
+	
+	
+	public static ResultSet executeQuery(String queryString) throws Exception {
+		 Query query = QueryFactory.create(queryString) ;
+		 HttpQuery.urlLimit = 100000;
+		 QueryEngineHTTP qexec = QueryExecutionFactory.createServiceRequest(CmdbController.queryEndPoint, query);
+		 
+		 //qexec.addParam("apikey", KEY);
+		 ResultSet results = qexec.execSelect() ;
+		 return results;
+	}
+	
+	public static String getQueryTermBatch(List<String> resources, String[] properties) {
+		String retVal = "";
+		
+		try {
+				
+			SelectBuilder selectQuery = new SelectBuilder();
+			selectQuery.addPrefix("prop", propertyUri);
+			selectQuery.addPrefix("ont", ontologyUri);
+			selectQuery.addPrefix("res", rescourceUri);
+			selectQuery.addVar( "*" );
+
+			selectQuery.addWhere("?uri", "prop:name", "?name");
+			
+			if (properties != null && properties.length > 0)
+			{
+				/* property binding for the query */
+				for (String prop : properties) {
+					String varName = prop.split(":")[1]; /* lets use the fragment after ':' as the var name */ 
+					selectQuery.addWhere("?uri", prop, "?"+varName);
+				}
+			}
+			//else {
+			//	selectQuery.addWhere("?uri", "prop:name", "?name");
+			//}
+			
+			/* we limit the query to the resources in the batch. For that we use FILTER and || */
+			StringBuilder filterTerm = null;
+			for (int i = 0; i < resources.size(); i++) {
+				if (filterTerm == null)
+					filterTerm = new StringBuilder();
+				filterTerm.append("REGEX(str(?uri), '"+  resources.get(i).toString() +"')" );
+				if (i+1 < resources.size())
+					filterTerm.append(" ||\n");
+			}
+			if (filterTerm != null)
+				selectQuery.addFilter(filterTerm.toString());
+			
+			retVal = selectQuery.toString();
+		}
+		catch (Exception ex) 
+		{
+			System.out.println(ex.toString() + ex.getMessage());
+		}
+		
+		return retVal;
+	}
+	
+/* ---------------------- */
+	// https://stackoverflow.com/questions/14374878/using-reflection-to-set-an-object-property
+	
+	public static boolean set(Object object, String fieldName, String fieldValue) {
+	    Class<?> clazz = object.getClass();
+	    while (clazz != null) {
+	        try {
+	            java.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
+	            field.setAccessible(true);
+	            Object objectFieldValue = toObject(field.getType(), fieldValue);
+	            field.set(object, objectFieldValue);
+	            return true;
+	        } catch (NoSuchFieldException e) {
+	            clazz = clazz.getSuperclass();
+	        } catch (Exception e) {
+	            throw new IllegalStateException(e);
+	        }
+	    }
+	    return false;
+	}
+	
+	public static boolean set(Object object, String fieldName, Object fieldValue) {
+	    Class<?> clazz = object.getClass();
+	    while (clazz != null) {
+	        try {
+	            java.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
+	            field.setAccessible(true);
+	            field.set(object, fieldValue);
+	            return true;
+	        } catch (NoSuchFieldException e) {
+	            clazz = clazz.getSuperclass();
+	        } catch (Exception e) {
+	            throw new IllegalStateException(e);
+	        }
+	    }
+	    return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <V> V get(Object object, String fieldName) {
+	    Class<?> clazz = object.getClass();
+	    while (clazz != null) {
+	        try {
+	        	java.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
+	            field.setAccessible(true);
+	            return (V) field.get(object);
+	        } catch (NoSuchFieldException e) {
+	            clazz = clazz.getSuperclass();
+	        } catch (Exception e) {
+	            throw new IllegalStateException(e);
+	        }
+	    }
+	    return null;
+	}
+	
+	public static Object toObject( Class clazz, String value ) {
+		if (Boolean.class == clazz || Boolean.TYPE == clazz) return Boolean.parseBoolean( value );
+	    if( Byte.class == clazz ) return Byte.parseByte( value );
+	    if( Short.class == clazz ) return Short.parseShort( value );
+	    if( Integer.class == clazz || Integer.TYPE == clazz) return Integer.parseInt( value );
+	    if( Long.class == clazz ) return Long.parseLong( value );
+	    if( Float.class == clazz ) return Float.parseFloat( value );
+	    if( Double.class == clazz ) return Double.parseDouble( value );
+	    return value;
 	}
 }

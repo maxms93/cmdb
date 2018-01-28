@@ -7,6 +7,7 @@ public abstract class CI implements Serializable {
 	private int id;
 	private String bezeichnung;
 	private String type;
+	private String name;
 
 	public CI(String type, String bezeichnung) {
 		super();
@@ -28,13 +29,26 @@ public abstract class CI implements Serializable {
 		this.id = id;
 	}
 	
+	public String getName() {
+		if (name == null || name == "")
+			return bezeichnung;
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+		this.bezeichnung = name;
+	}
 
 	public String getBezeichnung() {
+		if (bezeichnung == null || bezeichnung == "")
+			return name;
 		return bezeichnung;
 	}
 
 	public void setBezeichnung(String bezeichnung) {
 		this.bezeichnung = bezeichnung;
+		this.name = bezeichnung;
 	}
 
 	public String getType() {
