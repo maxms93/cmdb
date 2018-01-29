@@ -26,7 +26,7 @@
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+	href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0-beta.3/cerulean/bootstrap.min.css">
 <style>
 <%@include file="/WEB-INF/style.css"%>
 </style>
@@ -34,20 +34,73 @@
 </head>
 <body>
 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a class="navbar-brand" href="#">Configuration Management Database</a>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container">
+
+			<a class="navbar-brand" href="#">Configuration Management
+				Database</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarColor01" aria-controls="navbarColor01"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active"><a class="nav-link" href="#">CMDB
-						<span class="sr-only">(current)</span>
-				</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">CI
-						Management <span class="sr-only">(current)</span>
-				</a></li>
+				<li class="nav-item"><a class="nav-link" href="index.jsp">Overview
+						CI's</a></li>
+				<li class="nav-item"><a class="nav-link" href="create.jsp">Create
+						CI</a></li>
+				<!--  <li class="nav-item">
+			        <a class="nav-link" href="#">Pricing</a>
+			      </li>
+			      <li class="nav-item">
+			        <a class="nav-link" href="#">About</a>
+			      </li> -->
 			</ul>
 		</div>
 	</nav>
-	<div class="content">
+	
+	<div class="container">
+		<div class="page-header" id="banner">
+			<div class=row>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					<fieldset style="margin-top: 10px">
+						<legend>Add Component</legend>
+						<form name="addComponentForm" action="AddComponentAction" method="Post">
+							<div class="row">
+								<div class="col-lg-2 col-md-2 col-sm-2">
+									<label>Component: </label>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3">
+									<div class="form-group">
+										<select class="form-control" name="type">
+											<option value="Server" selected="selected">Server</option>
+											<option value="RAM">RAM</option>
+											<option value="Harddisk">Harddisk</option>
+											<option value="PC">PC</option>
+											<option value="Person">Person</option>
+											<option value="SystemSoftware">SystemSoftware</option>
+											<option value="ApplicationSoftware">ApplicationSoftware</option>
+										</select>
+									</div>
+
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-5 col-md-5 col-sm-5">
+									<button name="add" class="btn btn-primary" type="submit">Add</button>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
+	
+	<%-- <div class="content">
 				<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-8">
@@ -93,7 +146,7 @@
 			</div>
 
 		</div>
-	</div>
+	</div> --%>
 
 </body>
 <!-- Optional JavaScript -->

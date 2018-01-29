@@ -24,7 +24,7 @@
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+	href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0-beta.3/cerulean/bootstrap.min.css">
 <style>
 <%@include file="/WEB-INF/style.css"%>
 </style>
@@ -32,11 +32,85 @@
 </head>
 <body>
 	<%
-		//ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
-		ArrayList<CI> listOfCI = ReadController.GetAllServerFromDB();
+		ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
+		//ArrayList<CI> listOfCI = ReadController.GetAllServerFromDB();
 	%>
+	
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+	<div class="container">
+		
+		<a class="navbar-brand" href="x">Configuration Management Database</a>
+  			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    		<span class="navbar-toggler-icon"></span>
+ 			 </button>
+ 			 <ul class="navbar-nav mr-auto">
+			      <li class="nav-item active">
+			        <a class="nav-link" href="index.jsp">Overview CI's</a>
+			      </li>
+			      <li class="nav-item ">
+			        <a class="nav-link" href="create.jsp">Create CI</a>
+			      </li>
+			     <!--  <li class="nav-item">
+			        <a class="nav-link" href="#">Pricing</a>
+			      </li>
+			      <li class="nav-item">
+			        <a class="nav-link" href="#">About</a>
+			      </li> -->
+			    </ul>
+	 
+	</div>
+  </nav>
+	<div class="container">
+		<div class="page-header" id="banner">
+			<div class = row>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					<fieldset style="margin-top: 10px">
+						<legend>CI's from Fuseki DB</legend>
+							<table class="table table-hover">
+								<thead>
+							<tr>
+								<th scope="col">Serial Number</th>
+								<th scope="col">CI Type</th>
+								<th scope="col"></th>
+								
+							</tr>
+						</thead>
+						<tbody>
+							<%
+								for (CI ci : listOfCI) {
+							%>
+							<tr>
+								<td><%=ci.getId()%></td>
+								<td><%=ci.getType()%></td>
+								<td>
+									<a href="info.jsp?id=<%=ci.getId()%>" class="btn btn-sm btn-primary">See Info</a>
+									<% if (ci.getType().equals("Server") || ci.getType().equals("Person") || ci.getType().equals("PC")){
+									
+									out.println("<a href=\"addComponent.jsp?id="+ ci.getId() +"\" class=\"btn btn-sm btn-primary\">Add Component</a>");
+									
+								} %>
+								</td>
+															
+							</tr>
+							<%
+								}
+							%>
+						</tbody>
+							</table>
+					</fieldset>
+				</div> 
+			</div>
+			<!-- <div class="row">
+				<div class="col-lg-5 col-md-5 col-sm-5">
+					<a href="create.jsp" class="btn btn-primary">Create CI</a>
+				</div>
+				
+			</div> -->
+		</div>
+	
+	</div>
 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<a class="navbar-brand" href="#">Configuration Management Database</a>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
@@ -48,47 +122,8 @@
 				</a></li>
 			</ul>
 		</div>
-	</nav>
+	</nav> -->
 
-	<p>Eintraege aus Fuseki DB</p>
-	<div class="padder-top">
-		<div class="container-fluid text-center">
-			<div class="row content">
-				<div class="col-sm-1 sidenav"></div>
-				<div class="col-sm-10 text-left">
-					<table class="table table-hover table-sm table-dark">
-						<thead>
-							<tr>
-								<th scope="col">Serial Number</th>
-								<th scope="col">CI Type</th>
-							</tr>
-						</thead>
-						<tbody>
-							<%
-								for (CI ci : listOfCI) {
-							%>
-							<tr>
-								<td><%=ci.getId()%></td>
-								<td><%=ci.getType()%></td>
-								<td><a href="info.jsp?id=<%=ci.getId()%>" class="btn btn-sm btn-success">See Info</a></td>
-								
-								<% if (ci.getType().equals("Server") || ci.getType().equals("Person") || ci.getType().equals("PC")){
-									
-									out.println("<td><a href=\"addComponent.jsp?id="+ ci.getId() +"\" class=\"btn btn-sm btn-success\">Add Component</a></td>");
-									
-								} %>
-							</tr>
-							<%
-								}
-							%>
-						</tbody>
-					</table>
-					<a href="create.jsp" class="btn btn-sm btn-success">Create</a>
-				</div>
-				<div class="col-sm-1 sidenav"></div>
-			</div>
-		</div>
-	</div>
 
 </body>
 <!-- Optional JavaScript -->
