@@ -33,7 +33,6 @@
 <body>
 	<%
 		ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
-		//ArrayList<CI> listOfCI = ReadController.GetAllServerFromDB();
 	%>
 	
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -86,7 +85,7 @@
 									<a href="info.jsp?id=<%=ci.getId()%>" class="btn btn-sm btn-primary">See Info</a>
 									<% if (ci.getType().equals("Server") || ci.getType().equals("Person") || ci.getType().equals("PC")){
 									
-									out.println("<a href=\"addComponent.jsp?id="+ ci.getId() +"\" class=\"btn btn-sm btn-primary\">Add Component</a>");
+									out.println("<a href=\"addComponent.jsp?id="+ ci.getId() +"&type="+ ci.getType() +"\" class=\"btn btn-sm btn-primary\">Add Component</a>");
 									
 								} %>
 								</td>

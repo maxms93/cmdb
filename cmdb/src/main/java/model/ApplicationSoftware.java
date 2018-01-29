@@ -10,6 +10,10 @@ public class ApplicationSoftware extends CI {
 		super("ApplicationSoftware", bezeichnung);
 		this.linesOfCode = linesOfCode;
 	}
+	
+	public ApplicationSoftware(int id){
+		super(id);
+	}
 
 	public ApplicationSoftware() {
 		// TODO Auto-generated constructor stub

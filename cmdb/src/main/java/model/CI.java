@@ -13,7 +13,12 @@ public abstract class CI implements Serializable {
 		super();
 		this.id = IDHelper.getID();
 		this.bezeichnung = bezeichnung;
-		//this.type = type;
+		this.type = this.getClass().getSimpleName();
+	}
+	
+	public CI(int id) {
+		super();
+		this.id = id;
 		this.type = this.getClass().getSimpleName();
 	}
 

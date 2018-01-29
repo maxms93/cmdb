@@ -9,6 +9,10 @@ public class PC extends CI {
 	private boolean isThinclient;
 	private ArrayList<CI> listComponents;
 	
+	public PC(int id){
+		super(id);
+	}
+	
 	public PC(String bezeichnung, boolean isThinclient, ArrayList<CI> listComponents) {
 		super("PC", bezeichnung);
 		this.isThinclient = isThinclient;
@@ -56,7 +60,9 @@ public class PC extends CI {
 	}
 
 	@Override
-	public String appendCItoCI(String name, int id) {
-		return null;
+	public String appendCItoCI(String type, int id) {
+		return CmdbController.propertyPrefix + CmdbController.ontologyPrefix
+				+ "INSERT DATA\n{\n<http://artmayr.com/resource/" + type + "/" + id + ">" + "prop:isUsing \""
+				+ getType() + "/" + getId() + "\" .\n}";
 	}
 }

@@ -10,6 +10,10 @@ public class Server extends CI {
 	private boolean isSharedServer;
 	private ArrayList<CI> listComponents;
 	
+	public Server(int id){
+		super(id);
+	}
+	
 	public Server(String bezeichnung, boolean isVirtualized, boolean isSharedServer, ArrayList<CI> listComponents) {
 		super("Server", bezeichnung);
 		this.isVirtualized = isVirtualized;
@@ -68,7 +72,9 @@ public class Server extends CI {
 	}
 
 	@Override
-	public String appendCItoCI(String name, int id) {
-		return null;
+	public String appendCItoCI(String type, int id) {
+		return CmdbController.propertyPrefix + CmdbController.ontologyPrefix
+				+ "INSERT DATA\n{\n<http://artmayr.com/resource/" + type + "/" + id + ">" + "prop:isUsing \""
+				+ getType() + "/" + getId() + "\" .\n}";
 	}
 }
