@@ -52,7 +52,7 @@ public class ReadController extends HttpServlet {
 	public static String propertyUri = "http://artmayr.com/property/";
 	public static String ontologyUri = "http://artmayr.com/ontology/";
 	
-	private static ArrayList<CI> allFoundCIs = null;
+	public static ArrayList<CI> allFoundCIs = null;
 	
 	private static QueryExecution exec = null;
 
