@@ -25,19 +25,56 @@ public class Cmdb {
 	private static String updateEndPoint = "http://" + currentIP + ":3030/cmdb/update";
 	private static String queryEndPoint = "http://" + currentIP + ":3030/cmdb/query";
 	
+	private static QueryExecution exec = null;
 
-	public static void main(String[] args) {		
-		getDataFromFuseki();
+	public static void main(String[] args) {
+		System.out.println("-----");
+		System.out.println("Read all form Fuseki");
+		//getDataFromFuseki();
+		ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();		
+		for (CI ci : listOfCI) { System.out.println(ci.toString());	}
+		
+		/*
+		ArrayList<CI> searchCIs = ReadController.getCiFromDB("RAM", "1");
+		for (CI ci : searchCIs) { System.out.println(ci.toString()); }
+		
+		
+		System.out.println("-----");
+		System.out.println("Read Comp from Server/4 all form Fuseki");
+		ArrayList<CI> listOfComp = ReadController.getHasCompFromCi("Server", "4");
+		
+		for (CI ci : listOfComp) { System.out.println(ci.toString()); }
+		*/
+		
 
+		System.out.println("-----");
+		System.out.println("Clear all form Fuseki");
 		clearAllOnFuseki();
 		
+		System.out.println("-----");
+		System.out.println("Write to Fuseki");
 		writeStuffToFuseki();
+		
+		System.out.println("-----");
+		System.out.println("Read all form Fuseki");
+		getDataFromFuseki();
+		
+		System.out.println("-----");
+		listOfCI = ReadController.getAllCiFromDB();	
+		
+		System.out.println("-----");
+		System.out.println("Read Comp from Server/4  form Fuseki");
+		ArrayList<CI> listOfComp = ReadController.getHasCompFromCi("Server", "4");
+		
+		for (CI ci : listOfComp) { System.out.println(ci.toString()); }
 	}
 
 	private static void getDataFromFuseki() {
 		ArrayList<CI> listOfCI = getRAMFromFuseki();
 		listOfCI.addAll(getSoftwareFromFuseki());
 
+		//ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
+		
 		for (CI ci : listOfCI) {
 			System.out.println(ci.toString());
 		}
@@ -177,6 +214,7 @@ public class Cmdb {
 	private static void clearAllOnFuseki() {
 		UpdateRequest delete = UpdateFactory.create("CLEAR ALL");
 		UpdateProcessor processor = UpdateExecutionFactory.createRemote(delete, updateEndPoint);
+		
 		processor.execute();
 	}
 
@@ -191,8 +229,9 @@ public class Cmdb {
 				"?x prop:groesse ?groesse . \n" + 
 				"?x prop:taktung ?taktung . \n" + 
 				"}\n");
-		QueryExecution exec = QueryExecutionFactory.sparqlService(queryEndPoint, componentQuery.asQuery());
+		//QueryExecution exec = QueryExecutionFactory.sparqlService(queryEndPoint, componentQuery.asQuery());
 		try {
+			exec = QueryExecutionFactory.sparqlService(queryEndPoint, componentQuery.asQuery());
 			result = exec.execSelect();
 			listRAM = new ArrayList<CI>();
 			while (result.hasNext()) {
@@ -213,7 +252,8 @@ public class Cmdb {
 				listRAM.add(tempRAM);
 			}
 		} finally {
-			exec.close();
+			//exec.close();
+			//exec = null;
 		}
 		return listRAM;
 	}
@@ -223,7 +263,8 @@ public class Cmdb {
 		ResultSet result;
 		ParameterizedSparqlString componentQuery = new ParameterizedSparqlString("" + CmdbController.propertyPrefix
 				+ CmdbController.ontologyPrefix +
-				"SELECT\n" + "?type ?bez ?linesOfCode ?os \n" + 
+				//"SELECT\n" + "?type ?bez ?linesOfCode ?os \n" + 
+				"SELECT\n" + " * \n" + 
 				"WHERE {\n" + 
 				//"?x prop:id ?id . \n" + 
 				//"?x prop:type ?type . \n" + 
@@ -231,9 +272,10 @@ public class Cmdb {
 				// "?x prop:linesOfCode ?linesOfCode . \n" +
 				// "?x prop:os ?os . \n" +
 				// "OPTIONAL {?x prop:os ?os . \n ?x prop:linesOfCode ?linesOfCode . } \n" +
-				"FILTER (REGEX(?type, 'Software')) . \n" + "}\n");
-		QueryExecution exec = QueryExecutionFactory.sparqlService(queryEndPoint, componentQuery.asQuery());
+				"FILTER (REGEX(str(?x), 'Software')) . \n" + "}\n");
+		//QueryExecution exec = QueryExecutionFactory.sparqlService(queryEndPoint, componentQuery.asQuery());
 		try {
+			exec = QueryExecutionFactory.sparqlService(queryEndPoint, componentQuery.asQuery());
 			result = exec.execSelect();
 			listSoftware = new ArrayList<CI>();
 			while (result.hasNext()) {
@@ -241,28 +283,38 @@ public class Cmdb {
 
 				//RDFNode id = nextSolution.get("id");
 				RDFNode bezeichnung = nextSolution.get("bez");
-				RDFNode type = nextSolution.get("type");
-				if (type.toString().equals("SystemSoftware")) {
+				//RDFNode type = nextSolution.get("type");
+				RDFNode uri = nextSolution.get("x");
+				
+				String searchSubStr = "resource/";
+		        int index = uri.toString().indexOf(searchSubStr);
+		        String subString = uri.toString().substring(index + searchSubStr.length());
+		        int index2 =  subString.indexOf("/");		        
+		        String strType = "";
+		        strType = subString.substring(0, index2);
+				
+				if (strType.equals("SystemSoftware")) {
 					SystemSoftware ss = new SystemSoftware();
 					//ss.setId(id.asLiteral().getInt());
 					ss.setBezeichnung(bezeichnung.toString());
-					ss.setType(type.toString());
+					ss.setType(strType);
 					// ss.setOS(nextSolution.get("isOS").asLiteral().getBoolean());
 
 					listSoftware.add(ss);
 				}
-				if (type.toString().equals("ApplicationSoftware")) {
+				if (strType.equals("ApplicationSoftware")) {
 					ApplicationSoftware as = new ApplicationSoftware();
 					//as.setId(id.asLiteral().getInt());
 					as.setBezeichnung(bezeichnung.toString());
-					as.setType(type.toString());
+					as.setType(strType);
 					// as.setLinesOfCode(nextSolution.get("linesOfCode").asLiteral().getInt());
 
 					listSoftware.add(as);
 				}
 			}
 		} finally {
-			exec.close();
+			//exec.close();
+			//exec = null;
 		}
 		return listSoftware;
 	}
