@@ -24,6 +24,7 @@ import org.apache.jena.sparql.engine.http.HttpQuery;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.arq.querybuilder.*;
 
+import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 
 import model.*;
@@ -51,7 +52,9 @@ public class ReadController extends HttpServlet {
 	public static String propertyUri = "http://artmayr.com/property/";
 	public static String ontologyUri = "http://artmayr.com/ontology/";
 	
-	private static SelectBuilder selectBuild = null;
+	public static ArrayList<CI> allFoundCIs = null;
+	
+	private static QueryExecution exec = null;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -133,11 +136,12 @@ public class ReadController extends HttpServlet {
 	}
 
 	public static ArrayList<CI> getAllCiFromDB() {
+		
 		ArrayList<CI> listOfCI = new ArrayList<CI>();
-		//listOfCI.add(new Server("max", true, false));
+				
 		try
 		{
-			ResultSet result;
+			//ResultSet result;
 			
 			List<String> listOfModelsResource = new ArrayList<String>();
 			listOfModelsResource.add("Server");
@@ -149,62 +153,130 @@ public class ReadController extends HttpServlet {
 			//listOfModelsResource.add("SystemSoftware");
 			
 			for (String className : listOfModelsResource) {
+				
+				listOfCI.addAll(getAllCiFromDB(className));
+			}
+			
+			allFoundCIs = new ArrayList<CI>();
+			allFoundCIs.addAll(listOfCI);
+		}
+		catch (Exception ex) 
+		{
+			System.out.println(ex.toString() + ex.getMessage());
+		}
+		finally {
+			if (exec != null)
+				exec.close();
+		}
+		
+		return listOfCI;
+	}
+	
+	public static ArrayList<CI> getAllCiFromDB(String className) {
+		ArrayList<CI> listOfCI = new ArrayList<CI>();
+		
+		//QueryExecution exec = null;
+		
+		try
+		{
+			
+			if (className != null && className != "") {
+				
 				Class cls = Class.forName("model."+ className);
 				String[] properties = GetPropertiesFromClass(cls);
 				String queryBatch = getQueryTermBatch(Arrays.asList(className), properties);
 				ResultSet rs = executeQuery(queryBatch);
 				
-				while (rs.hasNext()) {
-					QuerySolution sol = rs.next();
-					
-					model.CI tempCI = (CI) cls.newInstance();
-					
-					RDFNode uri = sol.get("uri");
-					String searchSubStr = className + "/";
-			        int indexFromId = uri.toString().indexOf(searchSubStr);
-			        
-			        String strId = null;
-			        if (indexFromId > 0) {
-				        strId = uri.toString().substring(indexFromId + searchSubStr.length());
-				        
-				        //tempCI.setId(id.asLiteral().getInt());
-				        tempCI.setId(Integer.parseInt(strId));
-				        tempCI.setType(className);
-			        }
-					
-					/**
-					 * TODO: your code here ... do something with this term.
-					 * 
-					 * The sample code below just prints the term information.
-					 */
-					
-					// Remove comments to print resultset
-					Iterator<String> varnames = sol.varNames();
-					System.out.print("Term Data : ");
-					while (varnames.hasNext()) {
-						String var = varnames.next();
-						if (!sol.get(var).isLiteral()) {
-							System.out.print(var+"="+sol.get(var).toString()+"   ");
-						}
-						else {
-							System.out.print(var+"="+sol.get(var).asLiteral().getValue().toString()+"   ");
-							ReadController.set(tempCI, var, sol.get(var).asLiteral().getValue().toString());
-						}
-						
-					} 
-					System.out.println();
-					
-					if (strId != null)
-						listOfCI.add(tempCI);
-				}
+				GetCiFromResultSet(className, listOfCI, cls, rs);
+				
+				//if (exec != null)
+				//	exec.close();
 			}
 		}
 		catch (Exception ex) 
 		{
 			System.out.println(ex.toString() + ex.getMessage());
 		}
+		finally {
+			if (exec != null)
+				exec.close();
+		}
 		
 		return listOfCI;
+	}
+	
+	public static ArrayList<CI> getCiFromDB(String className, String id) {
+		ArrayList<CI> listOfCI = new ArrayList<CI>();
+		
+		//QueryExecution exec = null;
+		
+		try
+		{
+			
+			if (className != null && className != "") {
+				
+				Class cls = Class.forName("model."+ className);
+				String[] properties = GetPropertiesFromClass(cls);
+				String queryTerm = getQueryTerm(className, id, properties);
+				ResultSet rs = executeQuery(queryTerm);
+				
+				GetCiFromResultSet(className, listOfCI, cls, rs);
+				
+				//if (exec != null)
+				//	exec.close();
+			}
+		}
+		catch (Exception ex) 
+		{
+			System.out.println(ex.toString() + ex.getMessage());
+		}
+		finally {
+			if (exec != null)
+				exec.close();
+		}
+		
+		return listOfCI;
+	}
+
+	private static void GetCiFromResultSet(String className, ArrayList<CI> listOfCI, Class cls, ResultSet rs)
+			throws InstantiationException, IllegalAccessException {
+		while (rs.hasNext()) {
+			QuerySolution sol = rs.next();
+			
+			model.CI tempCI = (CI) cls.newInstance();
+			
+			RDFNode uri = sol.get("uri");
+			String searchSubStr = className + "/";
+		    int indexFromId = uri.toString().indexOf(searchSubStr);
+		    
+		    String strId = null;
+		    if (indexFromId > 0) {
+		        strId = uri.toString().substring(indexFromId + searchSubStr.length());
+		        
+		        //tempCI.setId(id.asLiteral().getInt());
+		        tempCI.setId(Integer.parseInt(strId));
+		        tempCI.setType(className);
+		    }
+
+			// Remove comments to print resultset
+			Iterator<String> varnames = sol.varNames();
+			System.out.print("Term Data : ");
+			while (varnames.hasNext()) {
+				String var = varnames.next();
+				if (!sol.get(var).isLiteral()) {
+					System.out.print(var+"="+sol.get(var).toString()+"   ");
+				}
+				else {
+					System.out.print(var+"="+sol.get(var).asLiteral().getValue().toString()+"   ");
+					ReadController.set(tempCI, var, sol.get(var).asLiteral().getValue().toString());
+				}
+				
+			} 
+			System.out.println();
+			
+			if (strId != null)
+				listOfCI.add(tempCI);
+		}
 	}
 	
 	public static String[] GetPropertiesFromClass(Class cls) throws Exception
@@ -227,15 +299,33 @@ public class ReadController extends HttpServlet {
 	}
 	
 	
-	public static ResultSet executeQuery(String queryString) throws Exception {
+	public static ResultSet executeQueryHTTP(String queryString) throws Exception {
 		 Query query = QueryFactory.create(queryString) ;
 		 HttpQuery.urlLimit = 100000;
 		 QueryEngineHTTP qexec = QueryExecutionFactory.createServiceRequest(CmdbController.queryEndPoint, query);
-		 
 		 //qexec.addParam("apikey", KEY);
 		 ResultSet results = qexec.execSelect() ;
 		 return results;
 	}
+	
+	public static ResultSet executeQuery(String queryString) throws Exception {
+		 Query query = QueryFactory.create(queryString) ;
+		 //HttpQuery.urlLimit = 100000;
+		 exec = QueryExecutionFactory.sparqlService(CmdbController.queryEndPoint, query);
+		 exec.setTimeout(500);
+		 ResultSet results = exec.execSelect();
+		 return results;
+	}
+	
+	public static ResultSet executeQuery(QueryExecution exec, String queryString) throws Exception {
+		 Query query = QueryFactory.create(queryString) ;
+		 //HttpQuery.urlLimit = 100000;
+		 exec = QueryExecutionFactory.sparqlService(CmdbController.queryEndPoint, query);
+		 exec.setTimeout(500);
+		 ResultSet results = exec.execSelect();
+		 return results;
+	}
+	
 	
 	public static String getQueryTermBatch(List<String> resources, String[] properties) {
 		String retVal = "";
@@ -270,6 +360,55 @@ public class ReadController extends HttpServlet {
 				filterTerm.append("REGEX(str(?uri), '"+  resources.get(i).toString() +"')" );
 				if (i+1 < resources.size())
 					filterTerm.append(" ||\n");
+			}
+			if (filterTerm != null)
+				selectQuery.addFilter(filterTerm.toString());
+			
+			retVal = selectQuery.toString();
+		}
+		catch (Exception ex) 
+		{
+			System.out.println(ex.toString() + ex.getMessage());
+		}
+		
+		return retVal;
+	}
+	
+	public static String getQueryTerm(String resources, String id, String[] properties) {
+		String retVal = "";
+		
+		try {
+				
+			SelectBuilder selectQuery = new SelectBuilder();
+			selectQuery.addPrefix("prop", propertyUri);
+			selectQuery.addPrefix("ont", ontologyUri);
+			selectQuery.addPrefix("res", rescourceUri);
+			selectQuery.addVar( "*" );
+
+			selectQuery.addWhere("?uri", "prop:name", "?name");
+			
+			if (properties != null && properties.length > 0)
+			{
+				/* property binding for the query */
+				for (String prop : properties) {
+					String varName = prop.split(":")[1]; /* lets use the fragment after ':' as the var name */ 
+					selectQuery.addWhere("?uri", prop, "?"+varName);
+				}
+			}
+			//else {
+			//	selectQuery.addWhere("?uri", "prop:name", "?name");
+			//}
+			
+			/* we limit the query to the resources in the batch. For that we use FILTER and || */
+			StringBuilder filterTerm = null;
+			if (resources != null && resources != "") {
+				if (filterTerm == null)	filterTerm = new StringBuilder();
+				
+				if (id != null && id != "")
+					filterTerm.append("?uri = <" + ReadController.rescourceUri+ "" + resources + "/" + id + ">");
+				else
+					filterTerm.append("REGEX(str(?uri), '" + resources + "')");
+
 			}
 			if (filterTerm != null)
 				selectQuery.addFilter(filterTerm.toString());
