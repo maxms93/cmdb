@@ -19,38 +19,49 @@ public class DeleteController extends HttpServlet {
 
 		String id = request.getParameter("delete");
 		String type = request.getParameter("type");
-		
-		String resource = "<http://artmayr.com/resource/" + type + "/" + id+ ">";
-		
-		UpdateRequest update = UpdateFactory.create(
-				CmdbController.propertyPrefix +
-                CmdbController.ontologyPrefix +
-				"DELETE " + 
-                "{ ?serial ?p ?o } " +
-                "WHERE " +
-				"{ ?serial ?p ?o . " +
-				"FILTER ( ?serial = " + resource + ") " +
-				"?serial ?p ?o }");
+
+		String resource = "<http://artmayr.com/resource/" + type + "/" + id
+				+ ">";
+
+		UpdateRequest update = UpdateFactory
+				.create(CmdbController.propertyPrefix
+						+ CmdbController.ontologyPrefix + "DELETE "
+						+ "{ ?serial ?p ?o } " + "WHERE "
+						+ "{ ?serial ?p ?o . " + "FILTER ( ?serial = "
+						+ resource + ") " + "?serial ?p ?o }");
 		UpdateProcessor processor = UpdateExecutionFactory.createRemote(update,
 				CmdbController.updateEndPoint);
 		processor.execute();
-		
-		
-		update = UpdateFactory.create(
-				CmdbController.propertyPrefix +
-                CmdbController.ontologyPrefix +
-				"DELETE " + 
-                "{ ?s ?p ?serial } " +
-                "WHERE " +
-				"{ ?s prop:hasComponent ?serial . " +
-				"FILTER ( ?serial= " + resource + ") " +
-				"?s ?p ?serial }");
+
+		update = UpdateFactory.create(CmdbController.propertyPrefix
+				+ CmdbController.ontologyPrefix + "DELETE "
+				+ "{ ?s ?p ?serial } " + "WHERE "
+				+ "{ ?s prop:hasComponent ?serial . " + "FILTER ( ?serial= \""
+				+ type + "/" + id +"\") " + "?s ?p ?serial }");
 		processor = UpdateExecutionFactory.createRemote(update,
 				CmdbController.updateEndPoint);
 		processor.execute();
-				
+		
+		update = UpdateFactory.create(CmdbController.propertyPrefix
+				+ CmdbController.ontologyPrefix + "DELETE "
+				+ "{ ?s ?p ?serial } " + "WHERE "
+				+ "{ ?s prop:isUsing ?serial . " + "FILTER ( ?serial= \""
+				+ type + "/" + id +"\") " + "?s ?p ?serial }");
+		processor = UpdateExecutionFactory.createRemote(update,
+				CmdbController.updateEndPoint);
+		processor.execute();
+
 		response.sendRedirect("index.jsp");
 
 	}
-	
+
+	/*
+	 * PREFIX prop: <http://artmayr.com/property/> PREFIX ont:
+	 * <http://artmayr.com/ontology/>
+	 * 
+	 * SELECT DISTINCT ?subject ?object WHERE { ?subject prop:name ?object.
+	 * FILTER (regex(str(?subject), "RAM", "i") || regex(str(?subject),
+	 * "SERVER", "i")) }
+	 */
+
 }

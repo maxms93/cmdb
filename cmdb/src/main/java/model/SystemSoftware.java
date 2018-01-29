@@ -6,6 +6,10 @@ public class SystemSoftware extends CI {
 
 	private boolean isOS;
 	
+	public SystemSoftware(int id){
+		super(id);
+	}
+	
 	public SystemSoftware(String bezeichnung, boolean isOS) {
 		super("SystemSoftware", bezeichnung);
 		this.isOS = isOS;

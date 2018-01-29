@@ -7,6 +7,10 @@ public class Harddisk extends CI {
 	private String groesse;
 	private String schnittstelle;
 	
+	public Harddisk(int id){
+		super(id);
+	}
+	
 	public Harddisk(String bezeichnung, String groesse, String schnittstelle) {
 		super("Harddisk", bezeichnung);
 		this.groesse = groesse;

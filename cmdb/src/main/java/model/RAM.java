@@ -7,6 +7,10 @@ public class RAM extends CI {
 	private String groesse;
 	private String taktung;
 	
+	public RAM(int id){
+		super(id);
+	}
+	
 	public RAM(String bezeichnung, String groesse, String taktung) {
 		super("RAM", bezeichnung);
 		this.groesse = groesse;

@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="javafx.util.Pair"%>
 <%@page import="java.util.HashMap"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
@@ -33,6 +34,17 @@
 
 </head>
 <body>
+
+	<%
+		ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
+		CI currentCi = null;
+		for (CI c : listOfCI) {
+			if (c.getId() == Integer.parseInt(request.getParameter("id"))) {
+				currentCi = c;
+				break;
+			}
+	}
+	%>
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 		<div class="container">
@@ -73,14 +85,33 @@
 								</div>
 								<div class="col-lg-3 col-md-3 col-sm-3">
 									<div class="form-group">
-										<select class="form-control" name="type">
-											<option value="Server" selected="selected">Server</option>
-											<option value="RAM">RAM</option>
-											<option value="Harddisk">Harddisk</option>
-											<option value="PC">PC</option>
-											<option value="Person">Person</option>
-											<option value="SystemSoftware">SystemSoftware</option>
-											<option value="ApplicationSoftware">ApplicationSoftware</option>
+										<select class="form-control" name="component">
+										
+										<%
+
+										String type = request.getParameter("type");
+										String pcServerComp = "ApplicationSoftware,Harddisk,RAM,SystemSoftware";
+										String personComp = "ApplicationSoftware,Harddisk,RAM,SystemSoftware,Server,PC";
+										
+										
+										if (type.equals("Server") || type.equals("PC")){
+											for(CI ci : listOfCI){
+												if (pcServerComp.indexOf(ci.getType()) >= 0){
+													out.println("<option value=\""+ ci.getId()+","+ci.getType()+"\">"+ci.toString()+"</option>");
+												}
+											}
+										}
+										
+										if (type.equals("Person")){
+											for(CI ci : listOfCI){
+												if (personComp.indexOf(ci.getType()) >= 0){
+													out.println("<option value=\""+ ci.getId()+","+ci.getType()+"\">"+ci.toString()+"</option>");
+												}
+											}
+										}
+		
+										%>
+					
 										</select>
 									</div>
 
@@ -88,6 +119,8 @@
 							</div>
 							<div class="row">
 								<div class="col-lg-5 col-md-5 col-sm-5">
+									<input name="id" hidden="true" value="<%=request.getParameter("id")%>" />
+									<input name="type" hidden="true" value="<%=request.getParameter("type")%>" />
 									<button name="add" class="btn btn-primary" type="submit">Add</button>
 								</div>
 							</div>

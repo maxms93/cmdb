@@ -141,6 +141,37 @@
 							</div>
 						</div>
 
+<%
+							} else if (currentCi.getClass().equals(Harddisk.class)) {
+
+								Harddisk disc = (Harddisk) currentCi;
+						%>
+
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2">
+								<label>Schnittstelle: </label>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3">
+								<div class="form-group">
+									<input type="text" class="form-control" id="schnittstelle"
+										disabled="disabled" value='<%=disc.getSchnittstelle()%>'>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2">
+								<label>Groesse: </label>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3">
+								<div class="form-group">
+									<input type="text" class="form-control" id="groesse"
+										disabled="disabled" value='<%=disc.getGroesse()%>'>
+								</div>
+							</div>
+
+						</div>
+						
 						<%
 							} else if (currentCi.getClass().equals(Person.class)) {
 
@@ -204,6 +235,54 @@
 								<div class="form-group">
 									<input type="checkbox" class="form-control" id="isos"
 										disabled="disabled" value='<%=sys.isOS()%>'>
+								</div>
+							</div>
+
+						</div>
+						
+						<%
+							} else if (currentCi.getClass().equals(PC.class)) {
+
+								PC pc = (PC) currentCi;
+						%>
+
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2">
+								<label>isThinclient: </label>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3">
+								<div class="form-group">
+									<input type="checkbox" class="form-control" id="isThinclient"
+										disabled="disabled" value='<%=pc.isThinclient()%>'>
+								</div>
+							</div>
+
+						</div>
+						
+						<%
+							} else if (currentCi.getClass().equals(Server.class)) {
+
+								Server server = (Server) currentCi;
+						%>
+
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2">
+								<label>isSharedServer: </label>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3">
+								<div class="form-group">
+									<input type="checkbox" class="form-control" id="isSharedServer"
+										disabled="disabled" value='<%=server.isSharedServer()%>'>
+								</div>
+							</div>
+							
+							<div class="col-lg-2 col-md-2 col-sm-2">
+								<label>isVirtualized: </label>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3">
+								<div class="form-group">
+									<input type="checkbox" class="form-control" id="isVirtualized"
+										disabled="disabled" value='<%=server.isVirtualized()%>'>
 								</div>
 							</div>
 
