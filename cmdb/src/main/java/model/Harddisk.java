@@ -52,6 +52,6 @@ public class Harddisk extends CI {
 		return  CmdbController.propertyPrefix +
                 CmdbController.ontologyPrefix +
                 "INSERT DATA\n{\n<http://artmayr.com/resource/" + type + "/" + id+ ">" +
-                "prop:hasComponent \"" + getType() + "/" + getId() + "\" .\n}";
+                "prop:isUsing \"" + getType() + "/" + getId() + "\" .\n}";
 	}
 }
