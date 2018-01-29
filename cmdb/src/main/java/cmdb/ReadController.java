@@ -24,6 +24,7 @@ import org.apache.jena.sparql.engine.http.HttpQuery;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.arq.querybuilder.*;
 
+import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 
 import model.*;
@@ -51,7 +52,9 @@ public class ReadController extends HttpServlet {
 	public static String propertyUri = "http://artmayr.com/property/";
 	public static String ontologyUri = "http://artmayr.com/ontology/";
 	
-	private static SelectBuilder selectBuild = null;
+	private static ArrayList<CI> allFoundCIs = null;
+	
+	private static QueryExecution exec = null;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -133,10 +136,9 @@ public class ReadController extends HttpServlet {
 	}
 
 	public static ArrayList<CI> getAllCiFromDB() {
+		
 		ArrayList<CI> listOfCI = new ArrayList<CI>();
-		
-		QueryExecution exec = null;
-		
+				
 		try
 		{
 			//ResultSet result;
@@ -153,55 +155,10 @@ public class ReadController extends HttpServlet {
 			for (String className : listOfModelsResource) {
 				
 				listOfCI.addAll(getAllCiFromDB(className));
-				
-				/*
-				Class cls = Class.forName("model."+ className);
-				String[] properties = GetPropertiesFromClass(cls);
-				String queryBatch = getQueryTermBatch(Arrays.asList(className), properties);
-				ResultSet rs = executeQuery(exec, queryBatch);
-				
-				while (rs.hasNext()) {
-					QuerySolution sol = rs.next();
-					
-					model.CI tempCI = (CI) cls.newInstance();
-					
-					RDFNode uri = sol.get("uri");
-					String searchSubStr = className + "/";
-			        int indexFromId = uri.toString().indexOf(searchSubStr);
-			        
-			        String strId = null;
-			        if (indexFromId > 0) {
-				        strId = uri.toString().substring(indexFromId + searchSubStr.length());
-				        
-				        //tempCI.setId(id.asLiteral().getInt());
-				        tempCI.setId(Integer.parseInt(strId));
-				        tempCI.setType(className);
-			        }
-					
-					// Remove comments to print resultset
-					Iterator<String> varnames = sol.varNames();
-					System.out.print("Term Data : ");
-					while (varnames.hasNext()) {
-						String var = varnames.next();
-						if (!sol.get(var).isLiteral()) {
-							System.out.print(var+"="+sol.get(var).toString()+"   ");
-						}
-						else {
-							System.out.print(var+"="+sol.get(var).asLiteral().getValue().toString()+"   ");
-							ReadController.set(tempCI, var, sol.get(var).asLiteral().getValue().toString());
-						}
-						
-					} 
-					System.out.println();
-					
-					if (strId != null)
-						listOfCI.add(tempCI);
-				}
-				
-				if (exec != null)
-					exec.close();
-				*/
 			}
+			
+			allFoundCIs = new ArrayList<CI>();
+			allFoundCIs.addAll(listOfCI);
 		}
 		catch (Exception ex) 
 		{
@@ -218,16 +175,17 @@ public class ReadController extends HttpServlet {
 	public static ArrayList<CI> getAllCiFromDB(String className) {
 		ArrayList<CI> listOfCI = new ArrayList<CI>();
 		
-		QueryExecution exec = null;
+		//QueryExecution exec = null;
 		
 		try
 		{
 			
 			if (className != null && className != "") {
+				
 				Class cls = Class.forName("model."+ className);
 				String[] properties = GetPropertiesFromClass(cls);
 				String queryBatch = getQueryTermBatch(Arrays.asList(className), properties);
-				ResultSet rs = executeQuery(exec, queryBatch);
+				ResultSet rs = executeQuery(queryBatch);
 				
 				GetCiFromResultSet(className, listOfCI, cls, rs);
 				
@@ -250,7 +208,7 @@ public class ReadController extends HttpServlet {
 	public static ArrayList<CI> getCiFromDB(String className, String id) {
 		ArrayList<CI> listOfCI = new ArrayList<CI>();
 		
-		QueryExecution exec = null;
+		//QueryExecution exec = null;
 		
 		try
 		{
@@ -260,7 +218,7 @@ public class ReadController extends HttpServlet {
 				Class cls = Class.forName("model."+ className);
 				String[] properties = GetPropertiesFromClass(cls);
 				String queryTerm = getQueryTerm(className, id, properties);
-				ResultSet rs = executeQuery(exec, queryTerm);
+				ResultSet rs = executeQuery(queryTerm);
 				
 				GetCiFromResultSet(className, listOfCI, cls, rs);
 				
@@ -341,7 +299,7 @@ public class ReadController extends HttpServlet {
 	}
 	
 	
-	public static ResultSet executeQuery(String queryString) throws Exception {
+	public static ResultSet executeQueryHTTP(String queryString) throws Exception {
 		 Query query = QueryFactory.create(queryString) ;
 		 HttpQuery.urlLimit = 100000;
 		 QueryEngineHTTP qexec = QueryExecutionFactory.createServiceRequest(CmdbController.queryEndPoint, query);
@@ -350,14 +308,24 @@ public class ReadController extends HttpServlet {
 		 return results;
 	}
 	
-	public static ResultSet executeQuery(QueryExecution exec, String queryString) throws Exception {
+	public static ResultSet executeQuery(String queryString) throws Exception {
 		 Query query = QueryFactory.create(queryString) ;
-		 HttpQuery.urlLimit = 100000;
+		 //HttpQuery.urlLimit = 100000;
 		 exec = QueryExecutionFactory.sparqlService(CmdbController.queryEndPoint, query);
-		 exec.setTimeout(5000);
+		 exec.setTimeout(500);
 		 ResultSet results = exec.execSelect();
 		 return results;
 	}
+	
+	public static ResultSet executeQuery(QueryExecution exec, String queryString) throws Exception {
+		 Query query = QueryFactory.create(queryString) ;
+		 //HttpQuery.urlLimit = 100000;
+		 exec = QueryExecutionFactory.sparqlService(CmdbController.queryEndPoint, query);
+		 exec.setTimeout(500);
+		 ResultSet results = exec.execSelect();
+		 return results;
+	}
+	
 	
 	public static String getQueryTermBatch(List<String> resources, String[] properties) {
 		String retVal = "";
@@ -436,11 +404,11 @@ public class ReadController extends HttpServlet {
 			if (resources != null && resources != "") {
 				if (filterTerm == null)	filterTerm = new StringBuilder();
 				
-				filterTerm.append("REGEX(str(?uri), '" + resources );
 				if (id != null && id != "")
-					filterTerm.append("/" + id);
-				
-				filterTerm.append("')");
+					filterTerm.append("?uri = <" + ReadController.rescourceUri+ "" + resources + "/" + id + ">");
+				else
+					filterTerm.append("REGEX(str(?uri), '" + resources + "')");
+
 			}
 			if (filterTerm != null)
 				selectQuery.addFilter(filterTerm.toString());
