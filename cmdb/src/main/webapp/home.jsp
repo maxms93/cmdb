@@ -72,8 +72,6 @@
 								- System Software <br/>
 								- Harddisk <br/>
 								- RAM <br/>
-								
-								blablablasdasdsadadssdasda
 						<p/>
 					</fieldset>
 				</div> 
