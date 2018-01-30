@@ -73,7 +73,7 @@
 								- Harddisk <br/>
 								- RAM <br/>
 								
-								blablablas
+								blablablasdasdsadads
 						<p/>
 					</fieldset>
 				</div> 
