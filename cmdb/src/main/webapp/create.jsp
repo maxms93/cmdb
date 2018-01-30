@@ -51,12 +51,6 @@
 			      <li class="nav-item active">
 			        <a class="nav-link" href="create.jsp">Create CI</a>
 			      </li>
-			     <!--  <li class="nav-item">
-			        <a class="nav-link" href="#">Pricing</a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link" href="#">About</a>
-			      </li> -->
 			    </ul>
 			    </div>
 		</div>

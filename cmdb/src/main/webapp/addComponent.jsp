@@ -133,54 +133,6 @@
 			
 		</div>
 	</div>
-	
-	<%-- <div class="content">
-				<div class="container-fluid">
-				<div class="row">
-					<div class="col-md-8">
-						<div class="card">
-							<div class="header">
-								<h4 class="title">Details</h4>
-							</div>
-							<div class="content">
-							
-						<form name="addComponentForm" action="AddComponentAction" method="Post">
-						
-						<div class="row">
-							<div class="col-md-3">
-								<div class="form-group">
-								
-								<label>Component</label> 
-								<select name="component">
-								
-								<% //Get aLL Available Components %>
-								
-									<option value="Server" selected="selected">Server</option>
-									<option value="RAM">RAM</option>
-									<option value="Harddisk">Harddisk</option>
-									<option value="PC">PC</option>
-									<option value="Person">Person</option>
-									<option value="SystemSoftware">SystemSoftware</option>
-									<option value="ApplicationSoftware">ApplicationSoftware</option>
-								
-								</select>
-								
-								</div>
-							</div>
-						</div>
-						
-						</div>				
-							<button name="add" class="btn btn-sm btn-success" type="submit">Add</button>
-						</form>
-
-						</div>
-					</div>
-				</div>
-			</div>
-			</div>
-
-		</div>
-	</div> --%>
 
 </body>
 <!-- Optional JavaScript -->

@@ -51,12 +51,6 @@
 						CI's</a></li>
 				<li class="nav-item"><a class="nav-link" href="create.jsp">Create
 						CI</a></li>
-				<!--  <li class="nav-item">
-			        <a class="nav-link" href="#">Pricing</a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link" href="#">About</a>
-			      </li> -->
 			</ul>
 			</div>
 		</div>
@@ -83,20 +77,6 @@
 								</div>
 							</div>
 
-							<%-- <div class="col-md-3">
-								<div class="form-group">
-								
-								<label>Type</label> 
-								<input type="text" class="form-control" 
-								id="type" name="type" disabled="disabled"
-								value='<%=request.getParameter("type")%>'>
-								
-								</div>
-							</div> --%>
-
-
-
-
 							<div class="row">
 								<div class="col-lg-2 col-md-2 col-sm-2">
 									<label>Description: </label>
@@ -109,18 +89,7 @@
 									</div>
 								</div>
 							</div>
-							<%-- <div class="col-md-3">
-								<div class="form-group">
-								
-								<label>Bezeichnung</label> 
-								<input type="text" class="form-control" 
-								id="bezeichnung" name="bezeichnung" disabled="disabled"
-								value="<%=request.getParameter("bezeichnung")%>">
-								
-								</div>
-							</div> --%>
-
-
+							
 							<%
 								if (request.getParameter("type") != null && request.getParameter("type").equals("RAM")) {
 							%>
@@ -136,17 +105,6 @@
 									</div>
 								</div>
 							</div>
-							<!-- <div class="col-md-3">
-								<div class="form-group">
-								
-								<label>Größe</label> 
-								<input type="text" class="form-control" 
-								id="groesse" name="groesse">
-								
-								</div>
-							</div> -->
-
-
 							<div class="row">
 								<div class="col-lg-2 col-md-2 col-sm-2">
 									<label>Clock Speed: </label>
@@ -158,15 +116,7 @@
 									</div>
 								</div>
 							</div>
-							<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>Taktung</label> <input type="text" class="form-control"
-											id="taktung" name="taktung">
-
-									</div>
-								</div> -->
-
+						
 							<%
 								} else if (request.getParameter("type") != null && request.getParameter("type").equals("Person")) {
 							%>
@@ -183,14 +133,7 @@
 								</div>
 								
 								
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>Vorname</label> <input type="text" class="form-control"
-											id="vorname" name="vorname">
-
-									</div>
-								</div> -->
+								
 							</div>
 
 							<div class="row">
@@ -205,14 +148,7 @@
 								</div>
 								
 								
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>Nachname</label> <input type="text"
-											class="form-control" id="nachname" name="nachname">
-
-									</div>
-								</div> -->
+								
 							</div>
 
 							<%
@@ -231,14 +167,7 @@
 									</div>
 								</div>
 								
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>Lines Of Code</label> <input type="text"
-											class="form-control" id="linesOfCode" name="linesOfCode">
-
-									</div>
-								</div> -->
+								
 							</div>
 
 							<%
@@ -256,14 +185,7 @@
 									</div>
 								</div>
 							
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>ISos</label> <input type="checkbox"
-											class="form-control" id="isOS" name="isOS">
-
-									</div>
-								</div> -->
+								
 							</div>
 
 							<%
@@ -280,15 +202,7 @@
 											class="form-control" id="isThinclient" name="isThinclient">
 									</div>
 								</div>
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>isThinclient</label> <input type="checkbox"
-											class="form-control" id="isThinclient" name="isThinclient">
-
-									</div>
-								</div> -->
-							</div>
+								</div>
 
 							<%
 								} else if (request.getParameter("type") != null && request.getParameter("type").equals("Server")) {
@@ -304,14 +218,7 @@
 											class="form-control" id="isVirtualized" name="isVirtualized">
 									</div>
 								</div>
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>isVirtualized</label> <input type="checkbox"
-											class="form-control" id="isVirtualized" name="isVirtualized">
-
-									</div>
-								</div> -->
+								
 							</div>
 
 							<div class="row">
@@ -325,15 +232,7 @@
 											name="isSharedServer">
 									</div>
 								</div>
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>isSharedServer</label> <input type="checkbox"
-											class="form-control" id="isSharedServer"
-											name="isSharedServer">
-
-									</div>
-								</div> -->
+								
 							</div>
 
 							<%
@@ -350,14 +249,7 @@
 											id="groesse" name="groesse">
 									</div>
 								</div>
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>Groesse</label> <input type="text" class="form-control"
-											id="groesse" name="groesse">
-
-									</div>
-								</div> -->
+								
 							</div>
 
 							<div class="row">
@@ -370,14 +262,7 @@
 											class="form-control" id="schnittstelle" name="schnittstelle">
 									</div>
 								</div>
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-
-										<label>schnittstelle</label> <input type="text"
-											class="form-control" id="schnittstelle" name="schnittstelle">
-
-									</div>
-								</div> -->
+								
 							</div>
 
 							<%
@@ -399,217 +284,6 @@
 
 	</div>
 
-
-
-	<%-- <div class="content">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-8">
-					<div class="card">
-						<div class="header">
-							<h4 class="title">Details</h4>
-						</div>
-						<div class="content">
-
-							<form name="createForm" action="CreateAction" method="Post">
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>Type</label> <input type="text" class="form-control"
-												id="type" name="type" disabled="disabled"
-												value='<%=request.getParameter("type")%>'>
-
-										</div>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>Bezeichnung</label> <input type="text"
-												class="form-control" id="bezeichnung" name="bezeichnung"
-												disabled="disabled"
-												value="<%=request.getParameter("bezeichnung")%>">
-
-										</div>
-									</div>
-								</div>
-
-								<%
-									if (request.getParameter("type") != null && request.getParameter("type").equals("RAM")) {
-								%>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>Größe</label> <input type="text" class="form-control"
-												id="groesse" name="groesse">
-
-										</div>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>Taktung</label> <input type="text"
-												class="form-control" id="taktung" name="taktung">
-
-										</div>
-									</div>
-								</div>
-
-								<%
-									} else if (request.getParameter("type") != null && request.getParameter("type").equals("Person")) {
-								%>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>Vorname</label> <input type="text"
-												class="form-control" id="vorname" name="vorname">
-
-										</div>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>Nachname</label> <input type="text"
-												class="form-control" id="nachname" name="nachname">
-
-										</div>
-									</div>
-								</div>
-
-								<%
-									} else if (request.getParameter("type") != null
-											&& request.getParameter("type").equals("ApplicationSoftware")) {
-								%>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>Lines Of Code</label> <input type="text"
-												class="form-control" id="linesOfCode" name="linesOfCode">
-
-										</div>
-									</div>
-								</div>
-
-								<%
-									} else if (request.getParameter("type") != null && request.getParameter("type").equals("SystemSoftware")) {
-								%>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>ISos</label> <input type="checkbox"
-												class="form-control" id="isOS" name="isOS">
-
-										</div>
-									</div>
-								</div>
-
-								<%
-									} else if (request.getParameter("type") != null && request.getParameter("type").equals("PC")) {
-								%>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>isThinclient</label> <input type="checkbox"
-												class="form-control" id="isThinclient" name="isThinclient">
-
-										</div>
-									</div>
-								</div>
-
-								<%
-									} else if (request.getParameter("type") != null && request.getParameter("type").equals("Server")) {
-								%>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>isVirtualized</label> <input type="checkbox"
-												class="form-control" id="isVirtualized" name="isVirtualized">
-
-										</div>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>isSharedServer</label> <input type="checkbox"
-												class="form-control" id="isSharedServer"
-												name="isSharedServer">
-
-										</div>
-									</div>
-								</div>
-
-								<%
-									} else if (request.getParameter("type") != null && request.getParameter("type").equals("Harddisk")) {
-								%>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>Groesse</label> <input type="text"
-												class="form-control" id="groesse" name="groesse">
-
-										</div>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-
-											<label>schnittstelle</label> <input type="text"
-												class="form-control" id="schnittstelle" name="schnittstelle">
-
-										</div>
-									</div>
-								</div>
-
-								<%
-									}
-								%>
-
-								<input name="type" hidden="true"
-									value="<%=request.getParameter("type")%>" /> <input
-									name="bezeichnung" hidden="true"
-									value="<%=request.getParameter("bezeichnung")%>" />
-								<button name="create" value="2" type="submit">Create</button>
-							</form>
-
-
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	</div> --%>
-	
 </body>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
