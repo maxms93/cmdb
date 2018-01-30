@@ -1,3 +1,4 @@
+<%@page import="com.sun.glass.ui.Size"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.apache.jena.query.ParameterizedSparqlString"%>
@@ -33,6 +34,10 @@
 <body>
 	<%
 		ArrayList<CI> listOfCI = ReadController.getAllCiFromDB();
+		if(listOfCI.size() > 0 && IDHelper.getIDFrontend()==0)
+		{
+			IDHelper.setIDFrontend(listOfCI.size()+1);
+		}
 	%>
 	
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
