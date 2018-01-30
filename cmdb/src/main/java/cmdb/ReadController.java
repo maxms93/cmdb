@@ -43,6 +43,7 @@ public class ReadController extends HttpServlet {
 	
 	// <http://artmayr.com/resource/"TYPE von CI"/
 	
+	
 	private static String PREFIXES = 
 			"PREFIX res: <http://artmayr.com/resource/>\n"+
 			"PREFIX prop: <http://artmayr.com/property/>\n"+
@@ -241,8 +242,6 @@ public class ReadController extends HttpServlet {
 	public static ArrayList<CI> getHasCompFromCi(String className, String id) {
 		ArrayList<CI> listOfCI = new ArrayList<CI>();
 		
-		//QueryExecution exec = null;
-		
 		ArrayList<CI> tempListOfCi = new ArrayList<CI>();
 		
 		try
@@ -253,13 +252,16 @@ public class ReadController extends HttpServlet {
 				//Class cls = Class.forName("model."+ className);
 				//String[] properties = GetPropertiesFromClass(cls);
 				//String[] properties = { "prop:hasComponent" };
-				String queryTerm = getQueryHasComp(className, id);
-				ResultSet rs = executeQuery(queryTerm);
 				
-				GetCiFromResultSet(tempListOfCi, rs);
+				// Mit hasComponent
+				//String queryTerm = getQueryHasComp(className, id);
+				//ResultSet rs = executeQuery(queryTerm);
+				//GetCiFromResultSet(tempListOfCi, rs, "hasComponent");
 				
-				//if (exec != null)
-				//	exec.close();
+				// oder mit isUsing
+				String queryTerm = getQueryIsUsing(className, id);
+				ResultSet rs = executeQuery(queryTerm);				
+				GetCiFromResultSet(tempListOfCi, rs, "isUsing");
 			}
 		}
 		catch (Exception ex) 
@@ -332,18 +334,18 @@ public class ReadController extends HttpServlet {
 		}
 	}
 	
-	private static void GetCiFromResultSet(ArrayList<CI> listOfCI, ResultSet rs)
+	private static void GetCiFromResultSet(ArrayList<CI> listOfCI, ResultSet rs, String compProp)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		while (rs.hasNext()) {
 			QuerySolution sol = rs.next();
 			
 			RDFNode uri = sol.get("uri");
-			RDFNode hasComponent = sol.get("hasComponent");
+			RDFNode comp = sol.get(compProp);
 			
 			//String searchSubStr = "resource/";
 	        //int index = uri.toString().indexOf(searchSubStr);
 	        //String subString = uri.toString().substring(index + searchSubStr.length());
-			String subString = hasComponent.toString();
+			String subString = comp.toString();
 	        int index2 =  subString.indexOf("/");		        
 	        String className = "";
 	        className = subString.substring(0, index2);
@@ -362,7 +364,7 @@ public class ReadController extends HttpServlet {
 		    String strId = null;
 		    if (indexFromId > 0) {
 		        //strId = hasComponent.toString().substring(indexFromId + searchSubStr2.length());
-		    	strId = hasComponent.toString().substring(indexFromId +1);
+		    	strId = comp.toString().substring(indexFromId +1);
 		        
 		        //tempCI.setId(id.asLiteral().getInt());
 		        tempCI.setId(Integer.parseInt(strId));
@@ -574,6 +576,47 @@ public class ReadController extends HttpServlet {
 		
 		return retVal;
 	}
+	
+	public static String getQueryIsUsing(String resources, String id) {
+		String retVal = "";
+		
+		try {
+				
+			SelectBuilder selectQuery = new SelectBuilder();
+			selectQuery.addPrefix("prop", propertyUri);
+			selectQuery.addPrefix("ont", ontologyUri);
+			selectQuery.addPrefix("res", rescourceUri);
+			selectQuery.addVar( "*" );
+
+			//selectQuery.addWhere("?uri", "prop:name", "?name");
+			
+			selectQuery.addWhere("?uri", "prop:isUsing", "?isUsing");
+			
+			/* we limit the query to the resources in the batch. For that we use FILTER and || */
+			StringBuilder filterTerm = null;
+			if (resources != null && resources != "") {
+				if (filterTerm == null)	filterTerm = new StringBuilder();
+				
+				if (id != null && id != "")
+					filterTerm.append("?uri = <" + ReadController.rescourceUri+ "" + resources + "/" + id + ">");
+				else
+					filterTerm.append("REGEX(str(?uri), '" + resources + "')");
+
+			}
+			if (filterTerm != null)
+				selectQuery.addFilter(filterTerm.toString());
+			
+			retVal = selectQuery.toString();
+
+		}
+		catch (Exception ex) 
+		{
+			System.out.println(ex.toString() + ex.getMessage());
+		}
+		
+		return retVal;
+	}
+	
 	
 /* ---------------------- */
 	// https://stackoverflow.com/questions/14374878/using-reflection-to-set-an-object-property
