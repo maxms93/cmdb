@@ -64,7 +64,8 @@ public class Person extends CI {
 				CmdbController.ontologyPrefix +
 				"INSERT DATA\n{\n<http://artmayr.com/resource/" + getType() +  "/" +  getId()+ "> " +
 				/* "prop:type \"" + getType() + "\" ;\n" + */
-				"prop:bezeichnung \"" + getBezeichnung() + "\" ;\n" +
+				//"prop:bezeichnung \"" + getBezeichnung() + "\" ;\n" +
+				"prop:name \"" + getBezeichnung() + "\" ;\n" +
 				"prop:vorname \"" + getVorname() + "\" ;\n" +
 				"prop:nachname \"" + getNachname() + "\".\n}";
 	}
