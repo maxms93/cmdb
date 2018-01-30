@@ -17,7 +17,7 @@ public class Harddisk extends CI {
 		this.schnittstelle = schnittstelle;
 	}
 	
-	public Harddisk() {}
+	public Harddisk() { }
 
 	public String getGroesse() {
 		return groesse;

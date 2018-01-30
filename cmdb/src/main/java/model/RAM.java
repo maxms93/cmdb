@@ -17,7 +17,7 @@ public class RAM extends CI {
 		this.taktung = taktung;
 	}
 	
-	public RAM() {}
+	public RAM() { }
 
 	public String getGroesse() {
 		return groesse;
@@ -59,3 +59,4 @@ public class RAM extends CI {
                 "prop:isUsing \"" + getType() + "/" + getId() + "\" .\n}";
 	}
 }
+ 
