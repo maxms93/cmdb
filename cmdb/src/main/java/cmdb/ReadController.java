@@ -254,16 +254,14 @@ public class ReadController extends HttpServlet {
 				//String[] properties = { "prop:hasComponent" };
 				
 				// Mit hasComponent
-				String queryTerm = getQueryHasComp(className, id);
-				ResultSet rs = executeQuery(queryTerm);				
-				GetCiFromResultSet(tempListOfCi, rs, "hasComponent");
-				
+				//String queryTerm = getQueryHasComp(className, id);
+				//ResultSet rs = executeQuery(queryTerm);
+				//GetCiFromResultSet(tempListOfCi, rs, "hasComponent");
 				
 				// oder mit isUsing
-				//String queryTerm = getQueryHasComp(className, id);
-				//ResultSet rs = executeQuery(queryTerm);				
-				//GetCiFromResultSet(tempListOfCi, rs, "isUsing");
-
+				String queryTerm = getQueryIsUsing(className, id);
+				ResultSet rs = executeQuery(queryTerm);				
+				GetCiFromResultSet(tempListOfCi, rs, "isUsing");
 			}
 		}
 		catch (Exception ex) 
