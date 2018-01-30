@@ -237,6 +237,59 @@ public class ReadController extends HttpServlet {
 		
 		return listOfCI;
 	}
+	
+	public static ArrayList<CI> getHasCompFromCi(String className, String id) {
+		ArrayList<CI> listOfCI = new ArrayList<CI>();
+		
+		//QueryExecution exec = null;
+		
+		ArrayList<CI> tempListOfCi = new ArrayList<CI>();
+		
+		try
+		{
+			
+			if (className != null && className != "") {
+				
+				//Class cls = Class.forName("model."+ className);
+				//String[] properties = GetPropertiesFromClass(cls);
+				//String[] properties = { "prop:hasComponent" };
+				String queryTerm = getQueryHasComp(className, id);
+				ResultSet rs = executeQuery(queryTerm);
+				
+				GetCiFromResultSet(tempListOfCi, rs);
+				
+				//if (exec != null)
+				//	exec.close();
+			}
+		}
+		catch (Exception ex) 
+		{
+			System.out.println(ex.toString() + ex.getMessage());
+		}
+		finally {
+			if (exec != null)
+				exec.close();
+		}
+		
+		try
+		{
+			for (CI comp : tempListOfCi) {
+				
+				listOfCI.addAll(getCiFromDB(comp.getType(), String.valueOf(comp.getId()) ));
+			}
+		}
+		catch (Exception ex) 
+		{
+			System.out.println(ex.toString() + ex.getMessage());
+		}
+		finally {
+			if (exec != null)
+				exec.close();
+		}
+		
+		return listOfCI;
+	}
+
 
 	private static void GetCiFromResultSet(String className, ArrayList<CI> listOfCI, Class cls, ResultSet rs)
 			throws InstantiationException, IllegalAccessException {
@@ -278,6 +331,65 @@ public class ReadController extends HttpServlet {
 				listOfCI.add(tempCI);
 		}
 	}
+	
+	private static void GetCiFromResultSet(ArrayList<CI> listOfCI, ResultSet rs)
+			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		while (rs.hasNext()) {
+			QuerySolution sol = rs.next();
+			
+			RDFNode uri = sol.get("uri");
+			RDFNode hasComponent = sol.get("hasComponent");
+			
+			//String searchSubStr = "resource/";
+	        //int index = uri.toString().indexOf(searchSubStr);
+	        //String subString = uri.toString().substring(index + searchSubStr.length());
+			String subString = hasComponent.toString();
+	        int index2 =  subString.indexOf("/");		        
+	        String className = "";
+	        className = subString.substring(0, index2);
+			
+	        if (className == null || className == "")
+	        	continue;
+	        
+	        Class cls = Class.forName("model."+ className);
+
+			model.CI tempCI = (CI) cls.newInstance();
+						
+			String searchSubStr2 = className + "/";
+		    //int indexFromId = uri.toString().indexOf(searchSubStr);
+			int indexFromId = subString.indexOf("/");
+		    
+		    String strId = null;
+		    if (indexFromId > 0) {
+		        //strId = hasComponent.toString().substring(indexFromId + searchSubStr2.length());
+		    	strId = hasComponent.toString().substring(indexFromId +1);
+		        
+		        //tempCI.setId(id.asLiteral().getInt());
+		        tempCI.setId(Integer.parseInt(strId));
+		        tempCI.setType(className);
+		    }
+
+			// Remove comments to print resultset
+			Iterator<String> varnames = sol.varNames();
+			System.out.print("Term Data : ");
+			while (varnames.hasNext()) {
+				String var = varnames.next();
+				if (!sol.get(var).isLiteral()) {
+					System.out.print(var+"="+sol.get(var).toString()+"   ");
+				}
+				else {
+					System.out.print(var+"="+sol.get(var).asLiteral().getValue().toString()+"   ");
+					ReadController.set(tempCI, var, sol.get(var).asLiteral().getValue().toString());
+				}
+				
+			} 
+			System.out.println();
+			
+			if (strId != null)
+				listOfCI.add(tempCI);
+		}
+	}
+	
 	
 	public static String[] GetPropertiesFromClass(Class cls) throws Exception
 	{
@@ -414,6 +526,46 @@ public class ReadController extends HttpServlet {
 				selectQuery.addFilter(filterTerm.toString());
 			
 			retVal = selectQuery.toString();
+		}
+		catch (Exception ex) 
+		{
+			System.out.println(ex.toString() + ex.getMessage());
+		}
+		
+		return retVal;
+	}
+	
+	public static String getQueryHasComp(String resources, String id) {
+		String retVal = "";
+		
+		try {
+				
+			SelectBuilder selectQuery = new SelectBuilder();
+			selectQuery.addPrefix("prop", propertyUri);
+			selectQuery.addPrefix("ont", ontologyUri);
+			selectQuery.addPrefix("res", rescourceUri);
+			selectQuery.addVar( "*" );
+
+			//selectQuery.addWhere("?uri", "prop:name", "?name");
+			
+			selectQuery.addWhere("?uri", "prop:hasComponent", "?hasComponent");
+			
+			/* we limit the query to the resources in the batch. For that we use FILTER and || */
+			StringBuilder filterTerm = null;
+			if (resources != null && resources != "") {
+				if (filterTerm == null)	filterTerm = new StringBuilder();
+				
+				if (id != null && id != "")
+					filterTerm.append("?uri = <" + ReadController.rescourceUri+ "" + resources + "/" + id + ">");
+				else
+					filterTerm.append("REGEX(str(?uri), '" + resources + "')");
+
+			}
+			if (filterTerm != null)
+				selectQuery.addFilter(filterTerm.toString());
+			
+			retVal = selectQuery.toString();
+
 		}
 		catch (Exception ex) 
 		{
