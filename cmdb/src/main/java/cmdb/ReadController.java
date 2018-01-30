@@ -43,6 +43,7 @@ public class ReadController extends HttpServlet {
 	
 	// <http://artmayr.com/resource/"TYPE von CI"/
 	
+	
 	private static String PREFIXES = 
 			"PREFIX res: <http://artmayr.com/resource/>\n"+
 			"PREFIX prop: <http://artmayr.com/property/>\n"+
