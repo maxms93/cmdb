@@ -17,7 +17,7 @@ public class RAM extends CI {
 		this.taktung = taktung;
 	}
 	
-	public RAM() {}
+	public RAM() { }
 
 	public String getGroesse() {
 		return groesse;
@@ -56,6 +56,7 @@ public class RAM extends CI {
 		return  CmdbController.propertyPrefix +
                 CmdbController.ontologyPrefix +
                 "INSERT DATA\n{\n<http://artmayr.com/resource/" + type + "/" + id+ ">" +
-                "prop:hasComponent \"" + getType() + "/" + getId() + "\" .\n}";
+                "prop:isUsing \"" + getType() + "/" + getId() + "\" .\n}";
 	}
 }
+ 
