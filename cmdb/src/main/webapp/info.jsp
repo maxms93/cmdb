@@ -141,6 +141,7 @@
 								</div>
 							</div>
 						</div>
+						
 
 <%
 							} else if (currentCi.getClass().equals(Harddisk.class)) {
@@ -150,7 +151,7 @@
 
 						<div class="row">
 							<div class="col-lg-2 col-md-2 col-sm-2">
-								<label>Schnittstelle: </label>
+								<label>Interface: </label>
 							</div>
 							<div class="col-lg-3 col-md-3 col-sm-3">
 								<div class="form-group">
@@ -162,7 +163,7 @@
 
 						<div class="row">
 							<div class="col-lg-2 col-md-2 col-sm-2">
-								<label>Groesse: </label>
+								<label>Size: </label>
 							</div>
 							<div class="col-lg-3 col-md-3 col-sm-3">
 								<div class="form-group">
@@ -253,8 +254,23 @@
 							</div>
 							<div class="col-lg-3 col-md-3 col-sm-3">
 								<div class="form-group">
-									<input type="checkbox" class="form-control" id="isThinclient"
+								   <%
+								   		if(pc.isThinclient())
+								   		{
+								   	%>	
+								   		<input type="checkbox" class="form-control" checked id="isThinclient"
 										disabled="disabled" value='<%=pc.isThinclient()%>'>
+								   	
+								   	<%	
+								   		}else{
+								   %>
+								  		<input type="checkbox" class="form-control" id="isThinclient"
+										disabled="disabled" value='<%=pc.isThinclient()%>'>						   
+								   	
+								   <%
+								   		}
+								   %>
+									
 								</div>
 							</div>
 
@@ -272,8 +288,23 @@
 							</div>
 							<div class="col-lg-3 col-md-3 col-sm-3">
 								<div class="form-group">
-									<input type="checkbox" class="form-control" id="isSharedServer"
+									 <%
+								   		if(server.isSharedServer())
+								   		{
+								   	%>	
+								   		<input type="checkbox" class="form-control" checked id="isThinclient"
 										disabled="disabled" value='<%=server.isSharedServer()%>'>
+								   	
+								   	<%	
+								   		}else{
+								   %>
+								  		<input type="checkbox" class="form-control" id="isThinclient"
+										disabled="disabled" value='<%=server.isSharedServer()%>'>						   
+								   	
+								   <%
+								   		}
+								   %>
+								
 								</div>
 							</div>
 							
@@ -286,8 +317,22 @@
 							</div>
 							<div class="col-lg-3 col-md-3 col-sm-3">
 								<div class="form-group">
-									<input type="checkbox" class="form-control" id="isVirtualized"
+									<%
+								   		if(server.isVirtualized())
+								   		{
+								   	%>	
+								   		<input type="checkbox" class="form-control" checked id="isThinclient"
 										disabled="disabled" value='<%=server.isVirtualized()%>'>
+								   	
+								   	<%	
+								   		}else{
+								   %>
+								  		<input type="checkbox" class="form-control" id="isThinclient"
+										disabled="disabled" value='<%=server.isVirtualized()%>'>						   
+								   	
+								   <%
+								   		}
+								   %>
 								</div>
 							</div>
 						</div>
@@ -295,7 +340,46 @@
 						<%
 							}
 						%>
-
+						<%
+							ArrayList<CI> listOfComp = ReadController.getHasCompFromCi(currentCi.getType(), String.valueOf(currentCi.getId()));
+							if(listOfComp.size() > 0)
+							{
+						%>
+						
+						<br />
+						<h5>CI is using the following components:</h5>
+						<table class="table table-hover">
+							<tr>
+								<th scope="col">Serial Number</th>
+								<th scope="col">CI Type</th>
+								<th scope="col">Description</th>
+								<th scope="col"></th>
+							</tr>
+							<%
+								
+								for(CI c : listOfComp){
+								
+							%>
+							<tr>
+								<td>
+									<%=c.getId()%>
+								</td>
+								<td>
+									<%=c.getType()%>
+								</td>
+								<td>
+									<%=c.getBezeichnung()%>
+								</td>
+								<td>
+									<a href="info.jsp?id=<%=c.getId()%>" class="btn btn-sm btn-primary">See Info</a>
+								</td>
+							</tr>
+								<%
+								}
+								%>
+							
+						</table>
+						<%} %>
 						<form name="deleteForm" action="DeleteAction" method="Post">
 							<input name="type" hidden="true" value="<%=currentCi.getType()%>" />
 							<button class="btn btn-primary" name="delete" value="<%=currentCi.getId()%>"

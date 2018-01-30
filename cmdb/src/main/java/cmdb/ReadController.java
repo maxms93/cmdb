@@ -148,9 +148,9 @@ public class ReadController extends HttpServlet {
 			listOfModelsResource.add("ApplicationSoftware");
 			listOfModelsResource.add("Harddisk");
 			listOfModelsResource.add("PC");
-			//listOfModelsResource.add("Person");
+			listOfModelsResource.add("Person");
 			listOfModelsResource.add("RAM");
-			//listOfModelsResource.add("SystemSoftware");
+			listOfModelsResource.add("SystemSoftware");
 			
 			for (String className : listOfModelsResource) {
 				
